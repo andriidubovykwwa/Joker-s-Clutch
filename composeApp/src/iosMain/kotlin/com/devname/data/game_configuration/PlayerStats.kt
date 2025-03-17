@@ -1,4 +1,4 @@
-package com.devname.plinjump.data.game_configuration
+package com.devname.data.game_configuration
 
 object PlayerStats {
     const val START_HEALTH = 50

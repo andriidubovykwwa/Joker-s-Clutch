@@ -1,30 +1,40 @@
-package com.devname.plinjump.screen.game.view_model
+package com.devname.screen.game.view_model
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devname.plinjump.data.game_configuration.Card
-import com.devname.plinjump.data.game_configuration.DisplayInfo
-import com.devname.plinjump.data.game_configuration.PlayerStats
+import androidx.navigation.toRoute
+import com.devname.data.game_configuration.Card
+import com.devname.data.game_configuration.DisplayInfo
+import com.devname.data.game_configuration.Enemy
+import com.devname.data.game_configuration.PlayerStats
+import com.devname.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
-class GameViewModel : ViewModel() {
+class GameViewModel(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val _state = MutableStateFlow(GameData())
     val state = _state.asStateFlow()
 
     init {
-        // TODO: only unlocked cards
+        val lvl = savedStateHandle.toRoute<Screen.Game>().lvl
+
+        val enemy = Enemy.entries.getOrNull(lvl) ?: Enemy.ENEMY_1
         val startDeck = Card.entries.flatMap { listOf(it, it) }.shuffled()
         val enemyAttackDefense =
-            (state.value.enemy.minAttackDefenseValue..state.value.enemy.maxAttackDefenseValue).random()
+            (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
         _state.update {
             it.copy(
                 startDeck = startDeck,
+                enemy = enemy,
+                enemyHealth = enemy.health,
                 playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
                 playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
@@ -42,6 +52,7 @@ class GameViewModel : ViewModel() {
             is GameEvent.SelectCard -> processSelectCard(event.index)
             is GameEvent.SwipeHandLeft -> processSwipeHandLeft()
             is GameEvent.SwipeHandRight -> processSwipeHandRight()
+            is GameEvent.SetupNewTurn -> processSetupNewTurn()
         }
     }
 
@@ -63,11 +74,30 @@ class GameViewModel : ViewModel() {
     }
 
     private fun processEndTurn() = viewModelScope.launch {
-        _state.update { it.copy(isTurnEnded = true) }
-        // TODO: calculate new values for player and enemy health
-        // TODO: check victory/defeat condition
+        val actualPlayerAttack = state.value.playerAttack - state.value.enemyBlock
+        val actualEnemyAttack = state.value.enemyAttack - state.value.playerBlock
+        val playerHealth = maxOf(state.value.playerHealth - actualEnemyAttack, 0)
+        val enemyHealth = maxOf(state.value.enemyHealth - actualPlayerAttack, 0)
+        _state.update {
+            it.copy(playerHealth = playerHealth, enemyHealth = enemyHealth, isTurnEnded = true)
+        }
+    }
 
-        // TODO: after animations set new values for enemy shield and attack
+    private fun processSetupNewTurn() = viewModelScope.launch {
+        val enemyAttackDefense =
+            (state.value.enemy.minAttackDefenseValue..state.value.enemy.maxAttackDefenseValue).random()
+        val enemyAttack = (0..enemyAttackDefense).random()
+        val enemyBlock = enemyAttackDefense - enemyAttack
+        _state.update {
+            it.copy(
+                isTurnEnded = false,
+                playerEnergy = PlayerStats.START_ENERGY,
+                playerDeck = it.startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
+                playerHand = it.startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                enemyAttack = enemyAttack,
+                enemyBlock = enemyBlock
+            )
+        }
     }
 
     private fun processPlaySelectedCard() = viewModelScope.launch {

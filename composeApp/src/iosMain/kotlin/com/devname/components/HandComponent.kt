@@ -1,4 +1,4 @@
-package com.devname.plinjump.components
+package com.devname.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,8 +20,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devname.plinjump.data.game_configuration.Card
-import com.devname.plinjump.data.game_configuration.DisplayInfo
+import com.devname.data.game_configuration.Card
+import com.devname.data.game_configuration.DisplayInfo
 
 @Composable
 fun HandComponent(

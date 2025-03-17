@@ -1,4 +1,4 @@
-package com.devname.plinjump.utils
+package com.devname.utils
 
 import org.jetbrains.skiko.OS
 import org.jetbrains.skiko.OSVersion

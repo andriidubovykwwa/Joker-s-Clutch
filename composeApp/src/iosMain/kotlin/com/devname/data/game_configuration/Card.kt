@@ -1,4 +1,4 @@
-package com.devname.plinjump.data.game_configuration
+package com.devname.data.game_configuration
 
 import jokersclutch.composeapp.generated.resources.Res
 import jokersclutch.composeapp.generated.resources.attack_card_1_desc

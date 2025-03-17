@@ -1,8 +1,8 @@
-package com.devname.plinjump.screen.game.view_model
+package com.devname.screen.game.view_model
 
-import com.devname.plinjump.data.game_configuration.Card
-import com.devname.plinjump.data.game_configuration.Enemy
-import com.devname.plinjump.data.game_configuration.PlayerStats
+import com.devname.data.game_configuration.Card
+import com.devname.data.game_configuration.Enemy
+import com.devname.data.game_configuration.PlayerStats
 
 data class GameData(
     // Player Stats

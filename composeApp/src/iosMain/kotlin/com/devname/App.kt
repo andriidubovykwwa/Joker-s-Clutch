@@ -1,9 +1,9 @@
-package com.devname.plinjump
+package com.devname
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.devname.plinjump.di.appModule
-import com.devname.plinjump.navigation.Navigation
+import com.devname.di.appModule
+import com.devname.navigation.Navigation
 import org.koin.compose.KoinApplication
 
 @Composable

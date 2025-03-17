@@ -1,4 +1,4 @@
-package com.devname.plinjump
+package com.devname
 
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.UIKit.UIApplication
