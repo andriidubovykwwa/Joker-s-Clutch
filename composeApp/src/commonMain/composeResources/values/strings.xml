@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Joker's Clutch</string>
+    <!--  Cards  -->
+    <string name="attack_card_1_name">Joker's Punch</string>
+    <string name="attack_card_1_desc">Deal 2 damage</string>
+    <string name="attack_card_2_name">Exploding Pie</string>
+    <string name="attack_card_2_desc">Deal 5 damage</string>
+    <string name="attack_card_3_name">Jester's Mallet</string>
+    <string name="attack_card_3_desc">Deal 8 damage</string>
+    <string name="defense_card_1_name">Instant Defense</string>
+    <string name="defense_card_1_desc">Gain 1 block</string>
+    <string name="defense_card_2_name">Reinforced Block</string>
+    <string name="defense_card_2_desc">Gain 3 block</string>
+    <string name="defense_card_3_name">Fortified Barrier</string>
+    <string name="defense_card_3_desc">Gain 6 block</string>
+    <string name="mis_card_1_name">Energy Surge</string>
+    <string name="mis_card_1_desc">Gain 1 energy</string>
+    <string name="mis_card_2_name">Luck's Favor</string>
+    <string name="mis_card_2_desc">Draw 1 card</string>
+    <string name="mis_card_3_name">Defensive Blow</string>
+    <string name="mis_card_3_desc">Deal 2 damage and gain 2 block</string>
+    <string name="mis_card_4_name">Sacrificial Strike</string>
+    <string name="mis_card_4_desc">Deal 5 damage and lose 5 health</string>
+    <!--  Enemies  -->
+    <string name="enemy_1_name">Enemy Name</string>
+    <string name="enemy_2_name">Enemy Name</string>
+    <string name="enemy_3_name">Enemy Name</string>
+    <string name="enemy_4_name">Enemy Name</string>
+    <string name="enemy_5_name">Enemy Name</string>
+</resources>
