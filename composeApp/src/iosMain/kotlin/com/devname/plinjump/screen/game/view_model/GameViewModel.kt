@@ -18,11 +18,17 @@ class GameViewModel : ViewModel() {
     init {
         // TODO: only unlocked cards
         val startDeck = Card.entries.flatMap { listOf(it, it) }.shuffled()
+        val enemyAttackDefense =
+            (state.value.enemy.minAttackDefenseValue..state.value.enemy.maxAttackDefenseValue).random()
+        val enemyAttack = (0..enemyAttackDefense).random()
+        val enemyBlock = enemyAttackDefense - enemyAttack
         _state.update {
             it.copy(
                 startDeck = startDeck,
                 playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN)
+                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                enemyAttack = enemyAttack,
+                enemyBlock = enemyBlock
             )
         }
 
@@ -58,6 +64,10 @@ class GameViewModel : ViewModel() {
 
     private fun processEndTurn() = viewModelScope.launch {
         _state.update { it.copy(isTurnEnded = true) }
+        // TODO: calculate new values for player and enemy health
+        // TODO: check victory/defeat condition
+
+        // TODO: after animations set new values for enemy shield and attack
     }
 
     private fun processPlaySelectedCard() = viewModelScope.launch {

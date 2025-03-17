@@ -21,6 +21,7 @@ data class GameData(
 
     // Enemy Stats
     val enemyHealth: Int = Enemy.ENEMY_1.health,
+    val enemy: Enemy = Enemy.ENEMY_1,
     val enemyAttack: Int = 0,
-    val enemyBlock: Int = 0
+    val enemyBlock: Int = 0,
 )
