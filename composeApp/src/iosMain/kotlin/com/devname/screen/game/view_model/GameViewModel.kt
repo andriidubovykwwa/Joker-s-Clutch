@@ -34,7 +34,7 @@ class GameViewModel(
             it.copy(
                 startDeck = startDeck,
                 enemy = enemy,
-                enemyHealth = enemy.health,
+                enemyHealth = enemy.startHealth,
                 playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
                 playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
@@ -53,6 +53,30 @@ class GameViewModel(
             is GameEvent.SwipeHandLeft -> processSwipeHandLeft()
             is GameEvent.SwipeHandRight -> processSwipeHandRight()
             is GameEvent.SetupNewTurn -> processSetupNewTurn()
+            is GameEvent.Restart -> processOnRestart()
+        }
+    }
+
+    private fun processOnRestart() = viewModelScope.launch {
+        val enemy = state.value.enemy
+        val enemyAttackDefense =
+            (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
+        val enemyAttack = (0..enemyAttackDefense).random()
+        val enemyBlock = enemyAttackDefense - enemyAttack
+        _state.update {
+            it.copy(
+                enemyHealth = enemy.startHealth,
+                playerHealth = PlayerStats.START_HEALTH,
+                isTurnEnded = false,
+                playerDeck = it.startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
+                playerHand = it.startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                enemyAttack = enemyAttack,
+                enemyBlock = enemyBlock,
+                playerAttack = 0,
+                playerBlock = 0,
+                displayHandStartIndex = 0,
+                selectedCardIndex = null
+            )
         }
     }
 
@@ -74,10 +98,13 @@ class GameViewModel(
     }
 
     private fun processEndTurn() = viewModelScope.launch {
-        val actualPlayerAttack = state.value.playerAttack - state.value.enemyBlock
-        val actualEnemyAttack = state.value.enemyAttack - state.value.playerBlock
+        val actualPlayerAttack = maxOf(state.value.playerAttack - state.value.enemyBlock, 0)
+        val actualEnemyAttack = maxOf(state.value.enemyAttack - state.value.playerBlock, 0)
         val playerHealth = maxOf(state.value.playerHealth - actualEnemyAttack, 0)
         val enemyHealth = maxOf(state.value.enemyHealth - actualPlayerAttack, 0)
+        if (playerHealth > 0 && enemyHealth == 0) {
+            // TODO: save info about defeated enemy to repository
+        }
         _state.update {
             it.copy(playerHealth = playerHealth, enemyHealth = enemyHealth, isTurnEnded = true)
         }
@@ -95,7 +122,11 @@ class GameViewModel(
                 playerDeck = it.startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
                 playerHand = it.startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
-                enemyBlock = enemyBlock
+                enemyBlock = enemyBlock,
+                playerAttack = 0,
+                playerBlock = 0,
+                displayHandStartIndex = 0,
+                selectedCardIndex = null
             )
         }
     }

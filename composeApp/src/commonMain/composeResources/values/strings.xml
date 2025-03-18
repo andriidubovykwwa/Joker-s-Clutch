@@ -27,4 +27,11 @@
     <string name="enemy_3_name">Enemy Name</string>
     <string name="enemy_4_name">Enemy Name</string>
     <string name="enemy_5_name">Enemy Name</string>
+    <!--  UI  -->
+    <string name="music">Music</string>
+    <string name="sounds">Sounds</string>
+    <string name="options">Options</string>
+    <string name="victory">Victory</string>
+    <string name="defeat">Defeat</string>
+    <string name="new_card_unlocked">New card unlocked</string>
 </resources>

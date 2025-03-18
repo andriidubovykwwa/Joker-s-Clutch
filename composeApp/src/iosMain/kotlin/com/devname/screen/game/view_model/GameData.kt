@@ -20,7 +20,7 @@ data class GameData(
     val displayHandStartIndex: Int = 0,
 
     // Enemy Stats
-    val enemyHealth: Int = Enemy.ENEMY_1.health,
+    val enemyHealth: Int = Enemy.ENEMY_1.startHealth,
     val enemy: Enemy = Enemy.ENEMY_1,
     val enemyAttack: Int = 0,
     val enemyBlock: Int = 0,

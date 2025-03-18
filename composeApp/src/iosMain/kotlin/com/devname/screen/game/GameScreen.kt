@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devname.components.DefeatDialog
 import com.devname.components.HandComponent
+import com.devname.components.VictoryDialog
 import com.devname.screen.game.view_model.GameEvent
 import com.devname.screen.game.view_model.GameViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -32,7 +35,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             obtainEvent(GameEvent.SetupNewTurn)
         }
     }
-    Box(Modifier.fillMaxSize().background(Color.White)) {
+    Box(Modifier.fillMaxSize().background(Color.White).safeContentPadding()) {
         Button(
             modifier = Modifier.align(Alignment.TopStart),
             onClick = { navController.popBackStack() }) {
@@ -48,7 +51,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             fontSize = 10.sp
         )
         HandComponent(
-            Modifier.fillMaxWidth().align(Alignment.BottomCenter).padding(bottom = 20.dp),
+            Modifier.fillMaxWidth().align(Alignment.BottomCenter),
             hand = state.playerHand,
             selectedCardIndex = state.selectedCardIndex,
             onSelectCard = { obtainEvent(GameEvent.SelectCard(it)) },
@@ -60,10 +63,12 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
         )
     }
     if (state.playerHealth == 0) {
-        // Defeat dialog
-        LaunchedEffect(Unit) { println("defeat") }
+        DefeatDialog(
+            onRestart = { obtainEvent(GameEvent.Restart) },
+            onHome = { navController.popBackStack() })
     } else if (state.enemyHealth == 0) {
-        // Victory dialog
-        LaunchedEffect(Unit) { println("victory") }
+        VictoryDialog(
+            onRestart = { obtainEvent(GameEvent.Restart) },
+            onHome = { navController.popBackStack() })
     }
 }
