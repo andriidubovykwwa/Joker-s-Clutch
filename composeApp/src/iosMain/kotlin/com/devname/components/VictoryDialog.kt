@@ -3,7 +3,9 @@ package com.devname.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -14,13 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.devname.data.game_configuration.Card
 import jokersclutch.composeapp.generated.resources.Res
 import jokersclutch.composeapp.generated.resources.new_card_unlocked
 import jokersclutch.composeapp.generated.resources.victory
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun VictoryDialog(modifier: Modifier = Modifier, onRestart: () -> Unit, onHome: () -> Unit) {
+fun VictoryDialog(
+    modifier: Modifier = Modifier,
+    onRestart: () -> Unit,
+    onHome: () -> Unit,
+    unlockedCards: List<Card>
+) {
     val shape = RoundedCornerShape(20.dp)
     Dialog(onDismissRequest = {}) {
         Column(
@@ -29,7 +37,20 @@ fun VictoryDialog(modifier: Modifier = Modifier, onRestart: () -> Unit, onHome: 
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(stringResource(Res.string.victory))
-            Text(stringResource(Res.string.new_card_unlocked))
+            if (unlockedCards.isNotEmpty()) {
+                Text(stringResource(Res.string.new_card_unlocked))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    unlockedCards.forEach { card ->
+                        CardComponent(
+                            modifier = Modifier.size(80.dp, 128.dp),
+                            card = card
+                        )
+                    }
+                }
+            }
             Button(onClick = onRestart) {
                 Text("Restart")
             }

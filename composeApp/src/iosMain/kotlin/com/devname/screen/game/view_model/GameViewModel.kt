@@ -27,7 +27,12 @@ class GameViewModel(
         val lvl = savedStateHandle.toRoute<Screen.Game>().lvl
 
         val enemy = Enemy.entries.getOrNull(lvl) ?: Enemy.ENEMY_1
-        val startDeck = Card.entries.flatMap { listOf(it, it) }.shuffled()
+        val lastCompletedLvl = appRepository.getLastCompletedLvl()
+        val startDeck =
+            Card.entries
+                .filter { lastCompletedLvl >= it.lvlToUnlock }
+                .flatMap { card -> List(PlayerStats.COPIES_OF_EACH_CARD_IN_START_DECK) { card } }
+                .shuffled()
         val enemyAttackDefense =
             (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
         val enemyAttack = (0..enemyAttackDefense).random()
@@ -40,7 +45,8 @@ class GameViewModel(
                 playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
                 playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
-                enemyBlock = enemyBlock
+                enemyBlock = enemyBlock,
+                lastCompletedLvl = lastCompletedLvl
             )
         }
 
@@ -65,6 +71,11 @@ class GameViewModel(
     }
 
     private fun processOnRestart() = viewModelScope.launch {
+        val startDeck =
+            Card.entries
+                .filter { state.value.lastCompletedLvl >= it.lvlToUnlock }
+                .flatMap { card -> List(PlayerStats.COPIES_OF_EACH_CARD_IN_START_DECK) { card } }
+                .shuffled()
         val enemy = state.value.enemy
         val enemyAttackDefense =
             (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
@@ -75,14 +86,16 @@ class GameViewModel(
                 enemyHealth = enemy.startHealth,
                 playerHealth = PlayerStats.START_HEALTH,
                 isTurnEnded = false,
-                playerDeck = it.startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                playerHand = it.startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                startDeck = startDeck,
+                playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
+                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
                 enemyBlock = enemyBlock,
                 playerAttack = 0,
                 playerBlock = 0,
                 displayHandStartIndex = 0,
-                selectedCardIndex = null
+                selectedCardIndex = null,
+                newCardUnlocked = false
             )
         }
     }
@@ -110,9 +123,17 @@ class GameViewModel(
         val playerHealth = maxOf(state.value.playerHealth - actualEnemyAttack, 0)
         val enemyHealth = maxOf(state.value.enemyHealth - actualPlayerAttack, 0)
         if (playerHealth > 0 && enemyHealth == 0) {
-            // Process completed lvl
-            // TODO: check if new cards was unlocked
+            val completedLvl = state.value.enemy.lvl
+            val maxLvl = state.value.lastCompletedLvl
             appRepository.processCompletedLvl(state.value.enemy.lvl)
+            if (completedLvl > maxLvl) {
+                _state.update {
+                    it.copy(
+                        lastCompletedLvl = completedLvl,
+                        newCardUnlocked = true,
+                    )
+                }
+            }
         }
         _state.update {
             it.copy(playerHealth = playerHealth, enemyHealth = enemyHealth, isTurnEnded = true)

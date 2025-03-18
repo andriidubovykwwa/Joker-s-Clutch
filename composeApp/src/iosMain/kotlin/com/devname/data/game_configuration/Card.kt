@@ -71,7 +71,7 @@ enum class Card(
         titleRes = Res.string.defense_card_2_name,
         imageRes = Res.drawable.card_art_example,
         descriptionRes = Res.string.defense_card_2_desc,
-        energyCost = 1,
+        energyCost = 2,
         block = 3,
         lvlToUnlock = 0
     ),
@@ -79,7 +79,7 @@ enum class Card(
         titleRes = Res.string.defense_card_3_name,
         imageRes = Res.drawable.card_art_example,
         descriptionRes = Res.string.defense_card_3_desc,
-        energyCost = 1,
+        energyCost = 3,
         block = 6,
         lvlToUnlock = 1
     ),

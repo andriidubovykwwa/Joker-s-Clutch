@@ -25,4 +25,7 @@ data class GameData(
     val enemy: Enemy = Enemy.ENEMY_1,
     val enemyAttack: Int = 0,
     val enemyBlock: Int = 0,
+
+    val lastCompletedLvl: Int = -1,
+    val newCardUnlocked: Boolean = false
 )
