@@ -2,7 +2,6 @@ package com.devname.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +29,6 @@ fun CardComponent(
     modifier: Modifier = Modifier,
     card: Card,
     fontSizeScale: Float = 1f,
-    onClick: (() -> Unit)? = null
 ) {
     val shape = RoundedCornerShape(10.dp)
     Column(
@@ -38,10 +36,7 @@ fun CardComponent(
             .aspectRatio(0.625f)
             .background(Color(0xffD9BDA5), shape)
             .clip(shape)
-            .then(
-                if (onClick != null) Modifier.clickable { onClick() }
-                else Modifier
-            ).padding(2.dp)
+            .padding(2.dp)
     ) {
         Row(Modifier.weight(25f).fillMaxWidth().padding(top = 3.dp)) {
             Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {

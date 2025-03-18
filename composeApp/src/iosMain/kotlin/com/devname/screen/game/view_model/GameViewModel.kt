@@ -56,7 +56,12 @@ class GameViewModel(
             is GameEvent.SwipeHandRight -> processSwipeHandRight()
             is GameEvent.SetupNewTurn -> processSetupNewTurn()
             is GameEvent.Restart -> processOnRestart()
+            is GameEvent.DisplayCard -> processDisplayCard(event.card)
         }
+    }
+
+    private fun processDisplayCard(card: Card?) = viewModelScope.launch {
+        _state.update { it.copy(displayCard = card) }
     }
 
     private fun processOnRestart() = viewModelScope.launch {

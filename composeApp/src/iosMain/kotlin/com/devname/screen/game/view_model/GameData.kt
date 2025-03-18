@@ -18,6 +18,7 @@ data class GameData(
     val selectedCardIndex: Int? = null,
     val isTurnEnded: Boolean = false,
     val displayHandStartIndex: Int = 0,
+    val displayCard: Card? = null,
 
     // Enemy Stats
     val enemyHealth: Int = Enemy.ENEMY_1.startHealth,

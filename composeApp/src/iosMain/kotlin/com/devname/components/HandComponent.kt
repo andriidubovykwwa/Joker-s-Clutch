@@ -1,5 +1,6 @@
 package com.devname.components
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devname.data.game_configuration.Card
@@ -32,6 +34,7 @@ fun HandComponent(
     modifier: Modifier = Modifier,
     hand: List<Card>,
     onSelectCard: (Int) -> Unit,
+    onDisplayCard: (Card) -> Unit,
     onPlaySelectedCard: () -> Unit,
     onEndTurn: () -> Unit,
     selectedCardIndex: Int?,
@@ -57,16 +60,20 @@ fun HandComponent(
                 } else {
                     hand
                 }
-            displayList.forEachIndexed { displayIndex, it ->
+            displayList.forEachIndexed { displayIndex, card ->
                 val index = displayIndex + displayStart
-                // TODO: display card in full screen if player hold finger
                 CardComponent(
                     Modifier
                         .weight(1f)
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = { onDisplayCard(card) },
+                                onTap = { onSelectCard(index) }
+                            )
+                        }
                         .rotate(if (selectedCardIndex == index) 7f else 0f)
                         .scale(if (selectedCardIndex == index) 1.04f else 1f),
-                    card = it,
-                    onClick = { onSelectCard(index) }
+                    card = card,
                 )
             }
             if (displayList.size < DisplayInfo.CARD_IN_HAND_MAX) { // To maintain card size

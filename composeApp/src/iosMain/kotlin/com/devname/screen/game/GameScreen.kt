@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devname.components.CardInfoDialog
 import com.devname.components.DefeatDialog
 import com.devname.components.HandComponent
 import com.devname.components.VictoryDialog
@@ -39,7 +40,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
     Box(Modifier.fillMaxSize().background(Color.White).safeContentPadding()) {
         Button(
             modifier = Modifier.align(Alignment.TopStart),
-            onClick = { navController.popBackStack() }) {
+            onClick = { navController.popBackStack(Screen.Menu, false) }) {
             Text("Back")
         }
         Text(
@@ -56,6 +57,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             hand = state.playerHand,
             selectedCardIndex = state.selectedCardIndex,
             onSelectCard = { obtainEvent(GameEvent.SelectCard(it)) },
+            onDisplayCard = { obtainEvent(GameEvent.DisplayCard(it)) },
             onPlaySelectedCard = { obtainEvent(GameEvent.PlaySelectedCard) },
             onEndTurn = { obtainEvent(GameEvent.EndTurn) },
             onSwipeLeft = { obtainEvent(GameEvent.SwipeHandLeft) },
@@ -71,5 +73,10 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
         VictoryDialog(
             onRestart = { obtainEvent(GameEvent.Restart) },
             onHome = { navController.popBackStack(Screen.Menu, false) })
+    }
+    state.displayCard?.let {
+        CardInfoDialog(
+            card = it,
+            onDismiss = { obtainEvent(GameEvent.DisplayCard(null)) })
     }
 }
