@@ -8,14 +8,23 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.devname.data.game_configuration.Enemy
 import com.devname.navigation.Screen
+import com.devname.screen.level_selector.view_model.LevelSelectorViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LevelSelectorScreen(navController: NavController) {
+fun LevelSelectorScreen(
+    navController: NavController,
+    viewModel: LevelSelectorViewModel = koinViewModel()
+) {
+    val state by viewModel.state.collectAsState()
     Box(Modifier.fillMaxSize().safeContentPadding(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -25,20 +34,13 @@ fun LevelSelectorScreen(navController: NavController) {
             Button(onClick = { navController.popBackStack() }) {
                 Text(text = "Back")
             }
-            Button(onClick = { navController.navigate(Screen.Game(0)) }) {
-                Text(text = "Enemy 1")
-            }
-            Button(onClick = { navController.navigate(Screen.Game(1)) }) {
-                Text(text = "Enemy 2")
-            }
-            Button(onClick = { navController.navigate(Screen.Game(2)) }) {
-                Text(text = "Enemy 3")
-            }
-            Button(onClick = { navController.navigate(Screen.Game(3)) }) {
-                Text(text = "Enemy 4")
-            }
-            Button(onClick = { navController.navigate(Screen.Game(4)) }) {
-                Text(text = "Enemy 5")
+            Enemy.entries.forEach {
+                Button(
+                    enabled = state.lastCompletedLvl + 1 >= it.lvl,
+                    onClick = { navController.navigate(Screen.Game(it.lvl)) }
+                ) {
+                    Text(text = it.name)
+                }
             }
         }
     }

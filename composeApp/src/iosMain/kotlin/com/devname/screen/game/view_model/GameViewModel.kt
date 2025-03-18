@@ -8,6 +8,7 @@ import com.devname.data.game_configuration.Card
 import com.devname.data.game_configuration.DisplayInfo
 import com.devname.data.game_configuration.Enemy
 import com.devname.data.game_configuration.PlayerStats
+import com.devname.data.repository.AppRepository
 import com.devname.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 import kotlin.math.min
 
 class GameViewModel(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val appRepository: AppRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(GameData())
     val state = _state.asStateFlow()
@@ -103,7 +105,9 @@ class GameViewModel(
         val playerHealth = maxOf(state.value.playerHealth - actualEnemyAttack, 0)
         val enemyHealth = maxOf(state.value.enemyHealth - actualPlayerAttack, 0)
         if (playerHealth > 0 && enemyHealth == 0) {
-            // TODO: save info about defeated enemy to repository
+            // Process completed lvl
+            // TODO: check if new cards was unlocked
+            appRepository.processCompletedLvl(state.value.enemy.lvl)
         }
         _state.update {
             it.copy(playerHealth = playerHealth, enemyHealth = enemyHealth, isTurnEnded = true)

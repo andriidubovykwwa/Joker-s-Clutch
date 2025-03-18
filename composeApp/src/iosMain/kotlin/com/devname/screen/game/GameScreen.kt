@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.devname.components.DefeatDialog
 import com.devname.components.HandComponent
 import com.devname.components.VictoryDialog
+import com.devname.navigation.Screen
 import com.devname.screen.game.view_model.GameEvent
 import com.devname.screen.game.view_model.GameViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,10 +66,10 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
     if (state.playerHealth == 0) {
         DefeatDialog(
             onRestart = { obtainEvent(GameEvent.Restart) },
-            onHome = { navController.popBackStack() })
+            onHome = { navController.popBackStack(Screen.Menu, false) })
     } else if (state.enemyHealth == 0) {
         VictoryDialog(
             onRestart = { obtainEvent(GameEvent.Restart) },
-            onHome = { navController.popBackStack() })
+            onHome = { navController.popBackStack(Screen.Menu, false) })
     }
 }

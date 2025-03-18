@@ -11,13 +11,15 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 enum class Enemy(
+    val lvl: Int,
     val titleRes: StringResource,
     val imageRes: DrawableResource,
     val startHealth: Int,
     val minAttackDefenseValue: Int,
-    val maxAttackDefenseValue: Int
+    val maxAttackDefenseValue: Int,
 ) {
     ENEMY_1(
+        lvl = 0,
         titleRes = Res.string.enemy_1_name,
         imageRes = Res.drawable.card_art_example,
         startHealth = 25,
@@ -25,6 +27,7 @@ enum class Enemy(
         maxAttackDefenseValue = 3
     ),
     ENEMY_2(
+        lvl = 1,
         titleRes = Res.string.enemy_2_name,
         imageRes = Res.drawable.card_art_example,
         startHealth = 50,
@@ -32,6 +35,7 @@ enum class Enemy(
         maxAttackDefenseValue = 5
     ),
     ENEMY_3(
+        lvl = 2,
         titleRes = Res.string.enemy_3_name,
         imageRes = Res.drawable.card_art_example,
         startHealth = 75,
@@ -39,6 +43,7 @@ enum class Enemy(
         maxAttackDefenseValue = 8
     ),
     ENEMY_4(
+        lvl = 3,
         titleRes = Res.string.enemy_4_name,
         imageRes = Res.drawable.card_art_example,
         startHealth = 100,
@@ -46,6 +51,7 @@ enum class Enemy(
         maxAttackDefenseValue = 10
     ),
     ENEMY_5(
+        lvl = 4,
         titleRes = Res.string.enemy_5_name,
         imageRes = Res.drawable.card_art_example,
         startHealth = 150,

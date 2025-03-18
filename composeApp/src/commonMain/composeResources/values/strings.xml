@@ -34,4 +34,6 @@
     <string name="victory">Victory</string>
     <string name="defeat">Defeat</string>
     <string name="new_card_unlocked">New card unlocked</string>
+    <string name="play_card">Play Card</string>
+    <string name="end_turn">End Turn</string>
 </resources>

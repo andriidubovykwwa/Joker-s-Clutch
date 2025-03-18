@@ -22,6 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devname.data.game_configuration.Card
 import com.devname.data.game_configuration.DisplayInfo
+import jokersclutch.composeapp.generated.resources.Res
+import jokersclutch.composeapp.generated.resources.end_turn
+import jokersclutch.composeapp.generated.resources.play_card
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HandComponent(
@@ -55,6 +59,7 @@ fun HandComponent(
                 }
             displayList.forEachIndexed { displayIndex, it ->
                 val index = displayIndex + displayStart
+                // TODO: display card in full screen if player hold finger
                 CardComponent(
                     Modifier
                         .weight(1f)
@@ -82,10 +87,10 @@ fun HandComponent(
                 )
             }
             Button(onClick = { onPlaySelectedCard() }) {
-                Text(text = "Play Card", fontSize = 10.sp)
+                Text(text = stringResource(Res.string.play_card), fontSize = 10.sp)
             }
             Button(onClick = { onEndTurn() }) {
-                Text(text = "End Turn", fontSize = 10.sp)
+                Text(text = stringResource(Res.string.end_turn), fontSize = 10.sp)
             }
             IconButton(onClick = { onSwipeRight() }) {
                 Icon(

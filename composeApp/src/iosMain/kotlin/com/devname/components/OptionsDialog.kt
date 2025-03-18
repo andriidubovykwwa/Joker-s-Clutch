@@ -26,7 +26,14 @@ import jokersclutch.composeapp.generated.resources.sounds
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun OptionDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit) {
+fun OptionDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+    onSetMusic: (Int) -> Unit,
+    onSetSounds: (Int) -> Unit,
+    music: Int,
+    sounds: Int,
+) {
     val shape = RoundedCornerShape(20.dp)
     Dialog(onDismissRequest = onDismiss) {
         Column(
@@ -37,14 +44,14 @@ fun OptionDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit) {
             Text(stringResource(Res.string.options))
             Row {
                 Text(stringResource(Res.string.music))
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onSetMusic(music - 1) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "Left"
                     )
                 }
-                Text("5")
-                IconButton(onClick = { /*TODO*/ }) {
+                Text(music.toString())
+                IconButton(onClick = { onSetMusic(music + 1) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = "Right"
@@ -53,14 +60,14 @@ fun OptionDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit) {
             }
             Row {
                 Text(stringResource(Res.string.sounds))
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onSetSounds(sounds - 1) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "Left"
                     )
                 }
-                Text("5")
-                IconButton(onClick = { /*TODO*/ }) {
+                Text(sounds.toString())
+                IconButton(onClick = { onSetSounds(sounds + 1) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = "Right"
