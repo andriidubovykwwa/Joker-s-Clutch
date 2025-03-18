@@ -1,10 +1,13 @@
 package com.devname.screen.collection.view_model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.devname.data.game_configuration.Card
 import com.devname.data.repository.AppRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CollectionViewModel(
     private val appRepository: AppRepository
@@ -16,5 +19,15 @@ class CollectionViewModel(
         _state.update {
             it.copy(lastCompletedLvl = appRepository.getLastCompletedLvl())
         }
+    }
+
+    fun obtainEvent(event: CollectionEvent) {
+        when (event) {
+            is CollectionEvent.DisplayCard -> processDisplayCard(event.card)
+        }
+    }
+
+    private fun processDisplayCard(card: Card?) = viewModelScope.launch {
+        _state.update { it.copy(displayCard = card) }
     }
 }
