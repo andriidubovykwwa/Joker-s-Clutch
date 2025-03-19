@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.devname.data.game_configuration.Enemy
 import com.devname.navigation.Screen
 import com.devname.screen.level_selector.view_model.LevelSelectorViewModel
+import com.devname.utils.SoundController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -31,13 +32,22 @@ fun LevelSelectorScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(text = "Level Selector")
-            Button(onClick = { navController.popBackStack() }) {
+            Button(onClick = {
+                SoundController.playClick(state.sounds)
+                navController.popBackStack()
+            }
+            ) {
                 Text(text = "Back")
             }
             Enemy.entries.forEach {
                 Button(
                     enabled = state.lastCompletedLvl + 1 >= it.lvl,
-                    onClick = { navController.navigate(Screen.Game(it.lvl)) }
+                    onClick = {
+                        SoundController.playClick(state.sounds)
+                        navController.navigate(
+                            Screen.Game(it.lvl)
+                        )
+                    }
                 ) {
                     Text(text = it.name)
                 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +22,7 @@ import com.devname.components.OptionDialog
 import com.devname.navigation.Screen
 import com.devname.screen.menu.view_model.MenuEvent
 import com.devname.screen.menu.view_model.MenuViewModel
+import com.devname.utils.SoundController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -28,21 +30,36 @@ fun MenuScreen(navController: NavController, viewModel: MenuViewModel = koinView
     val state by viewModel.state.collectAsState()
     val obtainEvent = viewModel::obtainEvent
     var isOptionsOpened by remember { mutableStateOf(false) }
+    LaunchedEffect(state.music) {
+        SoundController.playMusic(state.music)
+    }
     Box(Modifier.fillMaxSize().safeContentPadding(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Button(onClick = { navController.navigate(Screen.LevelSelector) }) {
+            Button(onClick = {
+                SoundController.playClick(state.sounds)
+                navController.navigate(Screen.LevelSelector)
+            }) {
                 Text("Play")
             }
-            Button(onClick = { navController.navigate(Screen.Collection) }) {
+            Button(onClick = {
+                SoundController.playClick(state.sounds)
+                navController.navigate(Screen.Collection)
+            }) {
                 Text("Collection")
             }
-            Button(onClick = { navController.navigate(Screen.Info) }) {
+            Button(onClick = {
+                SoundController.playClick(state.sounds)
+                navController.navigate(Screen.Info)
+            }) {
                 Text("Info")
             }
-            Button(onClick = { isOptionsOpened = true }) {
+            Button(onClick = {
+                SoundController.playClick(state.sounds)
+                isOptionsOpened = true
+            }) {
                 Text("Options")
             }
         }

@@ -18,6 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import com.devname.data.game_configuration.DisplayInfo
 import com.devname.data.game_configuration.Enemy
 import com.devname.screen.collection.view_model.CollectionEvent
 import com.devname.screen.collection.view_model.CollectionViewModel
+import com.devname.utils.SoundController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -44,7 +47,10 @@ fun CollectionScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {
-            Button(onClick = { navController.popBackStack() }) {
+            Button(onClick = {
+                SoundController.playClick(state.sounds)
+                navController.popBackStack()
+            }) {
                 Text(text = "Back")
             }
         }
@@ -71,7 +77,9 @@ fun CollectionScreen(
                                         detectTapGestures(
                                             onTap = { obtainEvent(CollectionEvent.DisplayCard(card)) }
                                         )
-                                    },
+                                    }
+                                    .rotate(if (state.displayCard == card) DisplayInfo.SELECTED_CARD_ROTATION else 0f)
+                                    .scale(if (state.displayCard == card) DisplayInfo.SELECTED_CARD_SCALE else 1f),
                                 card = card,
                             )
                             if (!unlocked) {

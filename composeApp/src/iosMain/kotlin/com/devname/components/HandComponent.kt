@@ -1,5 +1,7 @@
 package com.devname.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,10 +17,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,13 +45,18 @@ fun HandComponent(
     playAnimationIndex: Int?,
     onSwipeLeft: () -> Unit,
     onSwipeRight: () -> Unit,
-    displayStart: Int
+    displayStart: Int,
+    isShuffleAnimationActive: Boolean
 ) {
-    Column(
-        modifier
-    ) {
+    val cardOffsetWidthX by animateFloatAsState(
+        targetValue = if (isShuffleAnimationActive) -1f else 0f,
+        animationSpec = tween(durationMillis = if (!isShuffleAnimationActive) DisplayInfo.SHUFFLE_ANIMATION_TIME.toInt() else 0)
+    )
+    Column(modifier) {
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+            Modifier.fillMaxWidth().graphicsLayer {
+                translationX = cardOffsetWidthX * size.width * 1.5f
+            }.padding(horizontal = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             val displayList =
@@ -71,8 +80,8 @@ fun HandComponent(
                                 onTap = { onSelectCard(index) }
                             )
                         }
-                        .rotate(if (selectedCardIndex == index) 7f else 0f)
-                        .scale(if (selectedCardIndex == index) 1.04f else 1f),
+                        .rotate(if (selectedCardIndex == index) DisplayInfo.SELECTED_CARD_ROTATION else 0f)
+                        .scale(if (selectedCardIndex == index) DisplayInfo.SELECTED_CARD_SCALE else 1f),
                     card = card,
                     isPlayAnimationActive = index == playAnimationIndex
                 )

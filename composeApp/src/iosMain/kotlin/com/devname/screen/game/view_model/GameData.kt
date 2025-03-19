@@ -27,7 +27,6 @@ data class GameData(
     val enemyBlock: Int = 0,
 
     // Volume
-    val music: Int = 5,
     val sounds: Int = 5,
 
     val lastCompletedLvl: Int = -1,

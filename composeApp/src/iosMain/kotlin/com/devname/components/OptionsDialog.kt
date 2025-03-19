@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.devname.utils.SoundController
 import jokersclutch.composeapp.generated.resources.Res
 import jokersclutch.composeapp.generated.resources.music
 import jokersclutch.composeapp.generated.resources.options
@@ -35,7 +36,10 @@ fun OptionDialog(
     sounds: Int,
 ) {
     val shape = RoundedCornerShape(20.dp)
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = {
+        SoundController.playClick(sounds)
+        onDismiss()
+    }) {
         Column(
             modifier.widthIn(min = 150.dp).background(Color(0xbbffffff), shape).padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,14 +48,21 @@ fun OptionDialog(
             Text(stringResource(Res.string.options))
             Row {
                 Text(stringResource(Res.string.music))
-                IconButton(onClick = { onSetMusic(music - 1) }) {
+                IconButton(onClick = {
+                    SoundController.playClick(sounds)
+                    onSetMusic(music - 1)
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "Left"
                     )
                 }
                 Text(music.toString())
-                IconButton(onClick = { onSetMusic(music + 1) }) {
+                IconButton(onClick = {
+                    SoundController.playClick(sounds)
+                    onSetMusic(music + 1)
+                }
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = "Right"
@@ -60,14 +71,21 @@ fun OptionDialog(
             }
             Row {
                 Text(stringResource(Res.string.sounds))
-                IconButton(onClick = { onSetSounds(sounds - 1) }) {
+                IconButton(onClick = {
+                    SoundController.playClick(sounds)
+                    onSetSounds(sounds - 1)
+                }
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "Left"
                     )
                 }
                 Text(sounds.toString())
-                IconButton(onClick = { onSetSounds(sounds + 1) }) {
+                IconButton(onClick = {
+                    SoundController.playClick(sounds)
+                    onSetSounds(sounds + 1)
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = "Right"

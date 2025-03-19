@@ -4,6 +4,7 @@ import com.devname.data.repository.AppRepository
 import com.devname.data.repository.DefaultAppRepository
 import com.devname.screen.collection.view_model.CollectionViewModel
 import com.devname.screen.game.view_model.GameViewModel
+import com.devname.screen.info.view_model.InfoViewModel
 import com.devname.screen.level_selector.view_model.LevelSelectorViewModel
 import com.devname.screen.menu.view_model.MenuViewModel
 import org.koin.core.module.dsl.viewModel
@@ -15,4 +16,5 @@ val appModule = module {
     viewModel { MenuViewModel(get()) }
     viewModel { LevelSelectorViewModel(get()) }
     viewModel { CollectionViewModel(get()) }
+    viewModel { InfoViewModel(get()) }
 }

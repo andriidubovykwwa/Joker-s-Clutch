@@ -5,4 +5,5 @@ import com.devname.data.game_configuration.Card
 data class CollectionData(
     val lastCompletedLvl: Int = -1,
     val displayCard: Card? = null,
+    val sounds: Int = 5
 )

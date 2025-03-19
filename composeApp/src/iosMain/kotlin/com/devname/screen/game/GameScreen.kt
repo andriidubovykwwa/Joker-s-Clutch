@@ -26,6 +26,7 @@ import com.devname.data.game_configuration.Card
 import com.devname.navigation.Screen
 import com.devname.screen.game.view_model.GameEvent
 import com.devname.screen.game.view_model.GameViewModel
+import com.devname.utils.SoundController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -33,16 +34,21 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
     val state by viewModel.state.collectAsState()
     val obtainEvent = viewModel::obtainEvent
     val animatingCardIndex by viewModel.animatingCardIndex.collectAsState()
+    val isShuffleAnimationActive by viewModel.isShuffleAnimationActive.collectAsState()
     LaunchedEffect(state.isTurnEnded) {
         if (state.playerHealth > 0 && state.enemyHealth > 0) {
-            // TODO: animations?
+            // TODO: attack animations?
             obtainEvent(GameEvent.SetupNewTurn)
         }
     }
     Box(Modifier.fillMaxSize().background(Color.White).safeContentPadding()) {
         Button(
             modifier = Modifier.align(Alignment.TopStart),
-            onClick = { navController.popBackStack(Screen.Menu, false) }) {
+            onClick = {
+                SoundController.playClick(state.sounds)
+                navController.popBackStack(Screen.Menu, false)
+            }
+        ) {
             Text("Back")
         }
         Text(
@@ -65,7 +71,8 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             onSwipeLeft = { obtainEvent(GameEvent.SwipeHandLeft) },
             onSwipeRight = { obtainEvent(GameEvent.SwipeHandRight) },
             displayStart = state.displayHandStartIndex,
-            playAnimationIndex = animatingCardIndex
+            playAnimationIndex = animatingCardIndex,
+            isShuffleAnimationActive = isShuffleAnimationActive
         )
     }
     if (state.playerHealth == 0) {

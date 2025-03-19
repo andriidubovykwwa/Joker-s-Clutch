@@ -28,37 +28,42 @@ class GameViewModel(
     private val _animatingCardIndex = MutableStateFlow<Int?>(null)
     val animatingCardIndex = _animatingCardIndex.asStateFlow()
 
+    private val _isShuffleAnimationActive = MutableStateFlow<Boolean>(false)
+    val isShuffleAnimationActive = _isShuffleAnimationActive.asStateFlow()
+
     init {
-        val lvl = savedStateHandle.toRoute<Screen.Game>().lvl
+        viewModelScope.launch {
+            val lvl = savedStateHandle.toRoute<Screen.Game>().lvl
 
-        val enemy = Enemy.entries.getOrNull(lvl) ?: Enemy.ENEMY_1
-        val lastCompletedLvl = appRepository.getLastCompletedLvl()
-        val startDeck =
-            Card.entries
-                .filter { lastCompletedLvl >= it.lvlToUnlock }
-                .flatMap { card -> List(PlayerStats.COPIES_OF_EACH_CARD_IN_START_DECK) { card } }
-                .shuffled()
-        val enemyAttackDefense =
-            (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
-        val enemyAttack = (0..enemyAttackDefense).random()
-        val enemyBlock = enemyAttackDefense - enemyAttack
-        SoundController.playShuffle() // TODO: set sound value
-        _state.update {
-            it.copy(
-                startDeck = startDeck,
-                enemy = enemy,
-                enemyHealth = enemy.startHealth,
-                playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
-                enemyAttack = enemyAttack,
-                enemyBlock = enemyBlock,
-                lastCompletedLvl = lastCompletedLvl,
-                music = appRepository.getMusic(),
-                sounds = appRepository.getSounds()
-            )
+            val enemy = Enemy.entries.getOrNull(lvl) ?: Enemy.ENEMY_1
+            val lastCompletedLvl = appRepository.getLastCompletedLvl()
+            val startDeck =
+                Card.entries
+                    .filter { lastCompletedLvl >= it.lvlToUnlock }
+                    .flatMap { card -> List(PlayerStats.COPIES_OF_EACH_CARD_IN_START_DECK) { card } }
+                    .shuffled()
+            val enemyAttackDefense =
+                (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
+            val enemyAttack = (0..enemyAttackDefense).random()
+            val enemyBlock = enemyAttackDefense - enemyAttack
+            _state.update {
+                it.copy(
+                    startDeck = startDeck,
+                    enemy = enemy,
+                    enemyHealth = enemy.startHealth,
+                    playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
+                    playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                    enemyAttack = enemyAttack,
+                    enemyBlock = enemyBlock,
+                    lastCompletedLvl = lastCompletedLvl,
+                    sounds = appRepository.getSounds()
+                )
+            }
+            SoundController.playShuffle(state.value.sounds)
+            _isShuffleAnimationActive.update { true }
+            delay(DisplayInfo.SHUFFLE_ANIMATION_TIME)
+            _isShuffleAnimationActive.update { false }
         }
-
-
     }
 
     fun obtainEvent(event: GameEvent) {
@@ -89,7 +94,6 @@ class GameViewModel(
             (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
-        SoundController.playShuffle(state.value.sounds)
         _state.update {
             it.copy(
                 enemyHealth = enemy.startHealth,
@@ -107,15 +111,21 @@ class GameViewModel(
                 newCardUnlocked = false
             )
         }
+        SoundController.playShuffle(state.value.sounds)
+        _isShuffleAnimationActive.update { true }
+        delay(DisplayInfo.SHUFFLE_ANIMATION_TIME)
+        _isShuffleAnimationActive.update { false }
     }
 
     private fun processSwipeHandLeft() = viewModelScope.launch {
+        SoundController.playClick(state.value.sounds)
         _state.update {
             it.copy(displayHandStartIndex = maxOf(it.displayHandStartIndex - 1, 0))
         }
     }
 
     private fun processSwipeHandRight() = viewModelScope.launch {
+        SoundController.playClick(state.value.sounds)
         _state.update {
             it.copy(
                 displayHandStartIndex = min(
@@ -127,6 +137,7 @@ class GameViewModel(
     }
 
     private fun processEndTurn() = viewModelScope.launch {
+        SoundController.playClick(state.value.sounds)
         val actualPlayerAttack = maxOf(state.value.playerAttack - state.value.enemyBlock, 0)
         val actualEnemyAttack = maxOf(state.value.enemyAttack - state.value.playerBlock, 0)
         val playerHealth = maxOf(state.value.playerHealth - actualEnemyAttack, 0)
@@ -155,7 +166,6 @@ class GameViewModel(
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
         val startDeck = state.value.startDeck.shuffled()
-        SoundController.playShuffle(state.value.sounds)
         _state.update {
             it.copy(
                 isTurnEnded = false,
@@ -171,9 +181,14 @@ class GameViewModel(
                 selectedCardIndex = null
             )
         }
+        SoundController.playShuffle(state.value.sounds)
+        _isShuffleAnimationActive.update { true }
+        delay(DisplayInfo.SHUFFLE_ANIMATION_TIME)
+        _isShuffleAnimationActive.update { false }
     }
 
     private fun processPlaySelectedCard() = viewModelScope.launch {
+        SoundController.playClick(state.value.sounds)
         val index = state.value.selectedCardIndex ?: return@launch // No card selected
         val selectedCard = state.value.playerHand.getOrNull(index)
         val card = selectedCard ?: return@launch // No card selected
@@ -209,6 +224,7 @@ class GameViewModel(
     }
 
     private fun processSelectCard(index: Int) = viewModelScope.launch {
+        SoundController.playClick(state.value.sounds)
         if (state.value.selectedCardIndex != index) {
             _state.update { it.copy(selectedCardIndex = index) }
         } else {

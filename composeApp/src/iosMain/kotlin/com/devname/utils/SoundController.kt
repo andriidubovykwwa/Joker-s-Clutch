@@ -8,8 +8,10 @@ import platform.Foundation.NSURL
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalForeignApi::class)
 object SoundController {
+    private var musicPlayer = createPlayer("files/music.mp3", numberOfLoops = -1)
     private var shufflePlayer = createPlayer("files/shuffle.mp3")
     private var cardPlayPlayer = createPlayer("files/play_card.mp3")
+    private var clickPlayer = createPlayer("files/click.mp3")
 
     private const val DEFAULT_VOLUME = 5 // from 0 to 10
 
@@ -31,6 +33,17 @@ object SoundController {
         }
     }
 
+    fun playMusic(volume: Int) {
+        if (volume == 0) {
+            musicPlayer?.stop()
+            return
+        }
+        musicPlayer?.let {
+            it.volume = 0.1f * volume
+        }
+        musicPlayer?.play()
+    }
+
     fun playShuffle(volume: Int = DEFAULT_VOLUME) {
         if (volume == 0) return
         shufflePlayer?.let {
@@ -45,5 +58,13 @@ object SoundController {
             it.volume = 0.1f * volume
         }
         cardPlayPlayer?.play()
+    }
+
+    fun playClick(volume: Int = DEFAULT_VOLUME) {
+        if (volume == 0) return
+        clickPlayer?.let {
+            it.volume = 0.1f * volume
+        }
+        clickPlayer?.play()
     }
 }
