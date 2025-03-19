@@ -10,6 +10,7 @@ import com.devname.data.game_configuration.Enemy
 import com.devname.data.game_configuration.PlayerStats
 import com.devname.data.repository.AppRepository
 import com.devname.navigation.Screen
+import com.devname.utils.SoundController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +42,7 @@ class GameViewModel(
             (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
+        SoundController.playShuffle() // TODO: set sound value
         _state.update {
             it.copy(
                 startDeck = startDeck,
@@ -50,7 +52,9 @@ class GameViewModel(
                 playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
                 enemyBlock = enemyBlock,
-                lastCompletedLvl = lastCompletedLvl
+                lastCompletedLvl = lastCompletedLvl,
+                music = appRepository.getMusic(),
+                sounds = appRepository.getSounds()
             )
         }
 
@@ -85,6 +89,7 @@ class GameViewModel(
             (enemy.minAttackDefenseValue..enemy.maxAttackDefenseValue).random()
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
+        SoundController.playShuffle(state.value.sounds)
         _state.update {
             it.copy(
                 enemyHealth = enemy.startHealth,
@@ -150,6 +155,7 @@ class GameViewModel(
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
         val startDeck = state.value.startDeck.shuffled()
+        SoundController.playShuffle(state.value.sounds)
         _state.update {
             it.copy(
                 isTurnEnded = false,
@@ -177,6 +183,7 @@ class GameViewModel(
 
         _animatingCardIndex.update { index } // Start animation
         delay(DisplayInfo.PLAY_CARD_ANIMATION_TIME) // Wait till animation ends
+        SoundController.playCardPlay(state.value.sounds)
         _state.update {
             it.copy(
                 selectedCardIndex = null,
