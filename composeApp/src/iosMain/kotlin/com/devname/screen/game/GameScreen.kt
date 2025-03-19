@@ -77,13 +77,25 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
     }
     if (state.playerHealth == 0) {
         DefeatDialog(
-            onRestart = { obtainEvent(GameEvent.Restart) },
-            onHome = { navController.popBackStack(Screen.Menu, false) }
+            onRestart = {
+                SoundController.playClick(state.sounds)
+                obtainEvent(GameEvent.Restart)
+            },
+            onHome = {
+                SoundController.playClick(state.sounds)
+                navController.popBackStack(Screen.Menu, false)
+            }
         )
     } else if (state.enemyHealth == 0) {
         VictoryDialog(
-            onRestart = { obtainEvent(GameEvent.Restart) },
-            onHome = { navController.popBackStack(Screen.Menu, false) },
+            onRestart = {
+                SoundController.playClick(state.sounds)
+                obtainEvent(GameEvent.Restart)
+            },
+            onHome = {
+                SoundController.playClick(state.sounds)
+                navController.popBackStack(Screen.Menu, false)
+            },
             unlockedCards = if (state.newCardUnlocked) Card.entries.filter { it.lvlToUnlock == state.enemy.lvl }
             else emptyList(),
             onDisplayCard = { obtainEvent(GameEvent.DisplayCard(it)) },
