@@ -1,6 +1,7 @@
 package com.devname.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devname.data.game_configuration.Card
@@ -27,6 +29,7 @@ fun VictoryDialog(
     modifier: Modifier = Modifier,
     onRestart: () -> Unit,
     onHome: () -> Unit,
+    onDisplayCard: (Card) -> Unit,
     unlockedCards: List<Card>
 ) {
     val shape = RoundedCornerShape(20.dp)
@@ -45,7 +48,11 @@ fun VictoryDialog(
                 ) {
                     unlockedCards.forEach { card ->
                         CardComponent(
-                            modifier = Modifier.size(80.dp, 128.dp),
+                            modifier = Modifier.size(80.dp, 128.dp).pointerInput(Unit) {
+                                detectTapGestures(
+                                    onTap = { onDisplayCard(card) },
+                                )
+                            },
                             card = card
                         )
                     }

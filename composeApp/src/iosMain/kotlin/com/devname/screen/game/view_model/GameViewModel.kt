@@ -145,12 +145,14 @@ class GameViewModel(
             (state.value.enemy.minAttackDefenseValue..state.value.enemy.maxAttackDefenseValue).random()
         val enemyAttack = (0..enemyAttackDefense).random()
         val enemyBlock = enemyAttackDefense - enemyAttack
+        val startDeck = state.value.startDeck.shuffled()
         _state.update {
             it.copy(
                 isTurnEnded = false,
                 playerEnergy = PlayerStats.START_ENERGY,
-                playerDeck = it.startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                playerHand = it.startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                startDeck = startDeck,
+                playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
+                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
                 enemyAttack = enemyAttack,
                 enemyBlock = enemyBlock,
                 playerAttack = 0,

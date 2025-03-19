@@ -54,7 +54,6 @@ fun HandComponent(
                     if (displayStart + DisplayInfo.CARD_IN_HAND_MAX - 1 < hand.size) {
                         hand.subList(displayStart, displayStart + DisplayInfo.CARD_IN_HAND_MAX)
                     } else {
-                        // Rearrange card if one of the last cards was played
                         hand.take(DisplayInfo.CARD_IN_HAND_MAX)
                     }
                 } else {

@@ -76,7 +76,8 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             onRestart = { obtainEvent(GameEvent.Restart) },
             onHome = { navController.popBackStack(Screen.Menu, false) },
             unlockedCards = if (state.newCardUnlocked) Card.entries.filter { it.lvlToUnlock == state.enemy.lvl }
-            else emptyList()
+            else emptyList(),
+            onDisplayCard = { obtainEvent(GameEvent.DisplayCard(it)) },
         )
     }
     state.displayCard?.let {
