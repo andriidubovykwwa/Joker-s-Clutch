@@ -10,6 +10,7 @@ import com.devname.data.game_configuration.Enemy
 import com.devname.data.game_configuration.PlayerStats
 import com.devname.data.repository.AppRepository
 import com.devname.navigation.Screen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -22,6 +23,9 @@ class GameViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(GameData())
     val state = _state.asStateFlow()
+
+    private val _animatingCardIndex = MutableStateFlow<Int?>(null)
+    val animatingCardIndex = _animatingCardIndex.asStateFlow()
 
     init {
         val lvl = savedStateHandle.toRoute<Screen.Game>().lvl
@@ -170,6 +174,9 @@ class GameViewModel(
         if (state.value.playerEnergy < card.energyCost) return@launch // Not enough energy
         if (state.value.playerHealth < card.loseHealth) return@launch // Not enough health
         val displayIndex = state.value.displayHandStartIndex
+
+        _animatingCardIndex.update { index } // Start animation
+        delay(DisplayInfo.PLAY_CARD_ANIMATION_TIME) // Wait till animation ends
         _state.update {
             it.copy(
                 selectedCardIndex = null,
@@ -178,6 +185,7 @@ class GameViewModel(
                 else displayIndex
             )
         }
+        _animatingCardIndex.update { null } // Reset animation
         // Apply card effects
         _state.update {
             it.copy(

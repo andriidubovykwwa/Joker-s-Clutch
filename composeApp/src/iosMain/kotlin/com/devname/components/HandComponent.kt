@@ -38,6 +38,7 @@ fun HandComponent(
     onPlaySelectedCard: () -> Unit,
     onEndTurn: () -> Unit,
     selectedCardIndex: Int?,
+    playAnimationIndex: Int?,
     onSwipeLeft: () -> Unit,
     onSwipeRight: () -> Unit,
     displayStart: Int
@@ -73,6 +74,7 @@ fun HandComponent(
                         .rotate(if (selectedCardIndex == index) 7f else 0f)
                         .scale(if (selectedCardIndex == index) 1.04f else 1f),
                     card = card,
+                    isPlayAnimationActive = index == playAnimationIndex
                 )
             }
             if (displayList.size < DisplayInfo.CARD_IN_HAND_MAX) { // To maintain card size

@@ -32,6 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun GameScreen(navController: NavController, viewModel: GameViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     val obtainEvent = viewModel::obtainEvent
+    val animatingCardIndex by viewModel.animatingCardIndex.collectAsState()
     LaunchedEffect(state.isTurnEnded) {
         if (state.playerHealth > 0 && state.enemyHealth > 0) {
             // TODO: animations?
@@ -63,7 +64,8 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             onEndTurn = { obtainEvent(GameEvent.EndTurn) },
             onSwipeLeft = { obtainEvent(GameEvent.SwipeHandLeft) },
             onSwipeRight = { obtainEvent(GameEvent.SwipeHandRight) },
-            displayStart = state.displayHandStartIndex
+            displayStart = state.displayHandStartIndex,
+            playAnimationIndex = animatingCardIndex
         )
     }
     if (state.playerHealth == 0) {
