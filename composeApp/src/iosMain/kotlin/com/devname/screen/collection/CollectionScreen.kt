@@ -106,10 +106,11 @@ fun CollectionScreen(
                             )
                             if (!unlocked) {
                                 Box(Modifier.matchParentSize().background(Color(0xE6000000)))
-                                val enemyName = Enemy.entries.find { it.lvl == card.lvlToUnlock }
+                                val enemy = Enemy.entries.find { it.lvl == card.lvlToUnlock }
+                                    ?: Enemy.entries.last()
                                 AppText(
                                     modifier = Modifier.align(Alignment.Center),
-                                    text = "Defeat $enemyName to unlock",
+                                    text = "Defeat ${stringResource(enemy.titleRes)} to unlock",
                                     textAlign = TextAlign.Center,
                                     color = Color.White,
                                     outlineColor = null,

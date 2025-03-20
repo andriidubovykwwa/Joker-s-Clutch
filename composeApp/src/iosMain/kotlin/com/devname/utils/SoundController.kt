@@ -12,6 +12,8 @@ object SoundController {
     private var shufflePlayer = createPlayer("files/shuffle.mp3")
     private var cardPlayPlayer = createPlayer("files/play_card.mp3")
     private var clickPlayer = createPlayer("files/click.mp3")
+    private var victoryPlayer = createPlayer("files/victory.mp3")
+    private var defeatPlayer = createPlayer("files/defeat.mp3")
 
     private const val DEFAULT_VOLUME = 5 // from 0 to 10
 
@@ -66,5 +68,21 @@ object SoundController {
             it.volume = 0.1f * volume
         }
         clickPlayer?.play()
+    }
+
+    fun playVictory(volume: Int = DEFAULT_VOLUME) {
+        if (volume == 0) return
+        victoryPlayer?.let {
+            it.volume = 0.1f * volume
+        }
+        victoryPlayer?.play()
+    }
+
+    fun playDefeat(volume: Int = DEFAULT_VOLUME) {
+        if (volume == 0) return
+        defeatPlayer?.let {
+            it.volume = 0.1f * volume
+        }
+        defeatPlayer?.play()
     }
 }

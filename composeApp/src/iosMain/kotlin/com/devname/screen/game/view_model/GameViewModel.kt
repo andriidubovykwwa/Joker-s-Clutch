@@ -142,8 +142,8 @@ class GameViewModel(
         val actualEnemyAttack = maxOf(state.value.enemyAttack - state.value.playerBlock, 0)
         val playerHealth = maxOf(state.value.playerHealth - actualEnemyAttack, 0)
         val enemyHealth = maxOf(state.value.enemyHealth - actualPlayerAttack, 0)
-        // TODO: play win/lose sound
         if (playerHealth > 0 && enemyHealth == 0) {
+            SoundController.playVictory(state.value.sounds)
             val completedLvl = state.value.enemy.lvl
             val maxLvl = state.value.lastCompletedLvl
             appRepository.processCompletedLvl(state.value.enemy.lvl)
@@ -155,6 +155,8 @@ class GameViewModel(
                     )
                 }
             }
+        } else if (playerHealth == 0) {
+            SoundController.playDefeat(state.value.sounds)
         }
         _state.update {
             it.copy(playerHealth = playerHealth, enemyHealth = enemyHealth, isTurnEnded = true)
