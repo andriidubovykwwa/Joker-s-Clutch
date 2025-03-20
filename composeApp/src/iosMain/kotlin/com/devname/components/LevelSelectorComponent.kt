@@ -1,5 +1,10 @@
 package com.devname.components
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,10 +15,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,6 +40,15 @@ fun LevelSelectorComponent(
     unlocked: Boolean
 ) {
     val shape = RoundedCornerShape(15.dp)
+    val infiniteTransition = rememberInfiniteTransition()
+    val iconRotation by infiniteTransition.animateFloat(
+        initialValue = -20f,
+        targetValue = 20f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(3000),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
     Row(
         modifier
             .aspectRatio(3.25f)
@@ -47,7 +63,7 @@ fun LevelSelectorComponent(
     ) {
         Box(Modifier.weight(1f).padding(5.dp), contentAlignment = Alignment.Center) {
             Image(
-                modifier = Modifier.height(80.dp),
+                modifier = Modifier.height(80.dp).graphicsLayer { rotationY = iconRotation },
                 painter = painterResource(enemy.imageRes),
                 contentScale = ContentScale.FillHeight,
                 contentDescription = stringResource(enemy.titleRes),

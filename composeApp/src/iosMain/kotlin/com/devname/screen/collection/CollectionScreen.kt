@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -105,7 +106,10 @@ fun CollectionScreen(
                                 card = card,
                             )
                             if (!unlocked) {
-                                Box(Modifier.matchParentSize().background(Color(0xE6000000)))
+                                Box(
+                                    Modifier.matchParentSize()
+                                        .background(Color(0xE6000000), RoundedCornerShape(15.dp))
+                                )
                                 val enemy = Enemy.entries.find { it.lvl == card.lvlToUnlock }
                                     ?: Enemy.entries.last()
                                 AppText(
