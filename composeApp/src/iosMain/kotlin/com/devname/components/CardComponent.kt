@@ -52,7 +52,7 @@ fun CardComponent(
         targetValue = if (isPlayAnimationActive) -(cardHeight * 1.5f) else 0f,
         animationSpec = tween(durationMillis = if (isPlayAnimationActive) DisplayInfo.PLAY_CARD_ANIMATION_TIME.toInt() else 0)
     )
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(15.dp)
     Column(
         modifier
             .graphicsLayer(scaleX = scale, scaleY = scale, translationY = offsetY)
