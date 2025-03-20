@@ -157,6 +157,14 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
             )
         }
         item {
+            AppText(
+                text = "- You can see the card details after long pressing on the card",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
             Spacer(Modifier.height(10.dp))
         }
         item {

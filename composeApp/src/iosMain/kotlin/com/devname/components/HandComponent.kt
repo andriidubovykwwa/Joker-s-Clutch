@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -49,6 +50,7 @@ fun HandComponent(
     displayStart: Int,
     isShuffleAnimationActive: Boolean,
 ) {
+    val currentDisplayStart by rememberUpdatedState(displayStart)
     val cardOffsetWidthX by animateFloatAsState(
         targetValue = if (isShuffleAnimationActive) -1f else 0f,
         animationSpec = tween(durationMillis = if (!isShuffleAnimationActive) DisplayInfo.SHUFFLE_ANIMATION_TIME.toInt() else 0)
@@ -71,20 +73,19 @@ fun HandComponent(
                     hand
                 }
             displayList.forEachIndexed { displayIndex, card ->
-                val index = displayIndex + displayStart
                 CardComponent(
                     Modifier
                         .weight(1f)
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = { onDisplayCard(card) },
-                                onTap = { onSelectCard(index) }
+                                onTap = { onSelectCard(displayIndex + currentDisplayStart) }
                             )
                         }
-                        .rotate(if (selectedCardIndex == index) DisplayInfo.SELECTED_CARD_ROTATION else 0f)
-                        .scale(if (selectedCardIndex == index) DisplayInfo.SELECTED_CARD_SCALE else 1f),
+                        .rotate(if (selectedCardIndex == displayIndex + currentDisplayStart) DisplayInfo.SELECTED_CARD_ROTATION else 0f)
+                        .scale(if (selectedCardIndex == displayIndex + currentDisplayStart) DisplayInfo.SELECTED_CARD_SCALE else 1f),
                     card = card,
-                    isPlayAnimationActive = index == playAnimationIndex
+                    isPlayAnimationActive = displayIndex + currentDisplayStart == playAnimationIndex
                 )
             }
             if (displayList.size < DisplayInfo.CARD_IN_HAND_MAX) { // To maintain card size
