@@ -24,7 +24,7 @@ fun HealthBar(modifier: Modifier = Modifier, value: Int, maxValue: Int) {
     val shape = RoundedCornerShape(10.dp)
     Box(modifier.aspectRatio(4.61f).paint(painter = painterResource(Res.drawable.health_frame))) {
         Box(
-            Modifier.padding(vertical = 10.dp, horizontal = 12.dp)
+            Modifier.padding(vertical = 10.dp, horizontal = 14.dp)
                 .fillMaxWidth(value / maxValue.toFloat()).fillMaxHeight()
                 .background(
                     Brush.horizontalGradient(

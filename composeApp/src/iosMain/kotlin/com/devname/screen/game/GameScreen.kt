@@ -1,5 +1,7 @@
 package com.devname.screen.game
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -50,9 +57,12 @@ import jokersclutch.composeapp.generated.resources.attack
 import jokersclutch.composeapp.generated.resources.defense
 import jokersclutch.composeapp.generated.resources.enemy
 import jokersclutch.composeapp.generated.resources.game_bg
+import jokersclutch.composeapp.generated.resources.icon_attack_card_1
 import jokersclutch.composeapp.generated.resources.player
+import jokersclutch.composeapp.generated.resources.punch_effect
 import jokersclutch.composeapp.generated.resources.shield_icon
 import jokersclutch.composeapp.generated.resources.sword_icon
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -60,12 +70,18 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun GameScreen(navController: NavController, viewModel: GameViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
+    var showSlash by remember { mutableStateOf(false) }
     val obtainEvent = viewModel::obtainEvent
     val animatingCardIndex by viewModel.animatingCardIndex.collectAsState()
     val isShuffleAnimationActive by viewModel.isShuffleAnimationActive.collectAsState()
     LaunchedEffect(state.isTurnEnded) {
         if (state.playerHealth > 0 && state.enemyHealth > 0) {
-            // TODO: attack animations?
+            if (state.playerAttack > 0) {
+                SoundController.playSlash(state.sounds)
+                showSlash = true
+                delay(350)
+                showSlash = false
+            }
             obtainEvent(GameEvent.SetupNewTurn)
         }
     }
@@ -120,13 +136,30 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             Modifier.fillMaxWidth().align(Alignment.BottomCenter),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.fillMaxHeight(0.35f)
+            Box(
+                Modifier.fillMaxHeight(0.35f)
                     .graphicsLayer { translationY = size.height * 0.16f },
-                painter = painterResource(state.enemy.imageRes),
-                contentDescription = stringResource(state.enemy.titleRes),
-                contentScale = ContentScale.FillHeight
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(state.enemy.imageRes),
+                    contentDescription = stringResource(state.enemy.titleRes),
+                    contentScale = ContentScale.FillHeight
+                )
+                val punchVisibility by animateFloatAsState(
+                    targetValue = if (showSlash) 1f else 0f,
+                    animationSpec = tween(durationMillis = 350)
+                )
+                Image(
+                    painter = painterResource(Res.drawable.icon_attack_card_1),
+                    contentDescription = stringResource(Res.string.punch_effect),
+                    modifier = Modifier
+                        .fillMaxSize(0.3f)
+                        .alpha(punchVisibility)
+                        .scale(punchVisibility)
+                )
+            }
             Column(
                 Modifier.fillMaxWidth().background(Color(0xB3000000)).padding(
                     bottom = WindowInsets.safeContent.asPaddingValues().calculateBottomPadding(),

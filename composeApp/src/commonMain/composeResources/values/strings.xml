@@ -48,6 +48,7 @@
     <string name="right">Right</string>
     <string name="retry">Retry</string>
     <string name="home">Home</string>
-    <string name="defeat_text">TODO: lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</string>
+    <string name="punch_effect">Punch effect</string>
+    <string name="defeat_text">Don't let them giggle too much—try again!</string>
 
 </resources>

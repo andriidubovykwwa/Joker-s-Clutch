@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devname.components.AppText
 import com.devname.components.BackButton
+import com.devname.data.game_configuration.Enemy
+import com.devname.data.game_configuration.PlayerStats
 import com.devname.screen.info.view_model.InfoViewModel
 import com.devname.utils.SoundController
 import jokersclutch.composeapp.generated.resources.Res
@@ -69,6 +71,125 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
         item {
             Spacer(Modifier.height(10.dp))
         }
-        // TODO: add info text
+        val headerSize = 23.sp
+        val defaultSize = 20.sp
+        item {
+            AppText(
+                text = "OBJECTIVE",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = headerSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Defeat your opponent by strategically playing attack, defense, and special cards. If an opponent’s health points reach 0, you win. If yours reach 0, you lose.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            Spacer(Modifier.height(10.dp))
+        }
+        item {
+            AppText(
+                text = "GAMEPLAY",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = headerSize
+            )
+        }
+        item {
+            AppText(
+                text = "- You start with a deck containing ${PlayerStats.COPIES_OF_EACH_CARD_IN_START_DECK} copies of each available card.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Each turn, you draw ${PlayerStats.DRAW_CARD_PER_TURN} random cards from your deck.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- You have ${PlayerStats.START_ENERGY} energy points per turn to play cards.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Attack cards deal damage at the end of the turn.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Defense cards reduce incoming damage.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Special cards can combine attack and defense or provide other effects (e.g., drawing extra cards).",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- You can see the opponent’s upcoming attack and defense values to plan your moves.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            Spacer(Modifier.height(10.dp))
+        }
+        item {
+            AppText(
+                text = "PROGRESSION",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- There are ${Enemy.entries.size} opponents, each stronger than the last.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Defeat an opponent to unlock the next one.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
+        item {
+            AppText(
+                text = "- Winning a match unlocks a new card, which is added to your deck.",
+                color = Color.White,
+                outlineColor = Color.Black,
+                fontSize = defaultSize
+            )
+        }
     }
 }
