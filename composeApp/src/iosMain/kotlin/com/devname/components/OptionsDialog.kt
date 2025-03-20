@@ -1,29 +1,36 @@
 package com.devname.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.devname.utils.SoundController
 import jokersclutch.composeapp.generated.resources.Res
+import jokersclutch.composeapp.generated.resources.dialog_bg
+import jokersclutch.composeapp.generated.resources.left
 import jokersclutch.composeapp.generated.resources.music
 import jokersclutch.composeapp.generated.resources.options
+import jokersclutch.composeapp.generated.resources.right
 import jokersclutch.composeapp.generated.resources.sounds
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -35,29 +42,52 @@ fun OptionDialog(
     music: Int,
     sounds: Int,
 ) {
-    val shape = RoundedCornerShape(20.dp)
     Dialog(onDismissRequest = {
         SoundController.playClick(sounds)
         onDismiss()
     }) {
         Column(
-            modifier.widthIn(min = 150.dp).background(Color(0xbbffffff), shape).padding(10.dp),
+            modifier.widthIn(min = 150.dp).paint(
+                painter = painterResource(Res.drawable.dialog_bg),
+                contentScale = ContentScale.FillBounds
+            ).padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(stringResource(Res.string.options))
-            Row {
-                Text(stringResource(Res.string.music))
+            AppText(
+                text = stringResource(Res.string.options).uppercase(),
+                fontSize = 22.sp,
+                color = Color.White,
+                outlineColor = null
+            )
+            Spacer(Modifier.height(25.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                AppText(
+                    text = stringResource(Res.string.music).uppercase(),
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    outlineColor = null
+                )
                 IconButton(onClick = {
                     SoundController.playClick(sounds)
                     onSetMusic(music - 1)
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Left"
+                        contentDescription = stringResource(Res.string.left),
+                        tint = Color.White
                     )
                 }
-                Text(music.toString())
+                AppText(
+                    text = music.toString(),
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    outlineColor = null
+                )
                 IconButton(onClick = {
                     SoundController.playClick(sounds)
                     onSetMusic(music + 1)
@@ -65,12 +95,23 @@ fun OptionDialog(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Right"
+                        contentDescription = stringResource(Res.string.right),
+                        tint = Color.White
                     )
                 }
             }
-            Row {
-                Text(stringResource(Res.string.sounds))
+            Spacer(Modifier.height(10.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                AppText(
+                    text = stringResource(Res.string.sounds).uppercase(),
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    outlineColor = null
+                )
                 IconButton(onClick = {
                     SoundController.playClick(sounds)
                     onSetSounds(sounds - 1)
@@ -78,17 +119,24 @@ fun OptionDialog(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Left"
+                        contentDescription = stringResource(Res.string.left),
+                        tint = Color.White
                     )
                 }
-                Text(sounds.toString())
+                AppText(
+                    text = sounds.toString(),
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    outlineColor = null
+                )
                 IconButton(onClick = {
                     SoundController.playClick(sounds)
                     onSetSounds(sounds + 1)
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Right"
+                        contentDescription = stringResource(Res.string.right),
+                        tint = Color.White
                     )
                 }
             }

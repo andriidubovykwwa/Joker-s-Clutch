@@ -9,10 +9,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -22,15 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.devname.data.game_configuration.Card
 import com.devname.data.game_configuration.DisplayInfo
 import jokersclutch.composeapp.generated.resources.Res
 import jokersclutch.composeapp.generated.resources.end_turn
+import jokersclutch.composeapp.generated.resources.left
 import jokersclutch.composeapp.generated.resources.play_card
+import jokersclutch.composeapp.generated.resources.right
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -46,13 +47,13 @@ fun HandComponent(
     onSwipeLeft: () -> Unit,
     onSwipeRight: () -> Unit,
     displayStart: Int,
-    isShuffleAnimationActive: Boolean
+    isShuffleAnimationActive: Boolean,
 ) {
     val cardOffsetWidthX by animateFloatAsState(
         targetValue = if (isShuffleAnimationActive) -1f else 0f,
         animationSpec = tween(durationMillis = if (!isShuffleAnimationActive) DisplayInfo.SHUFFLE_ANIMATION_TIME.toInt() else 0)
     )
-    Column(modifier) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
         Row(
             Modifier.fillMaxWidth().graphicsLayer {
                 translationX = cardOffsetWidthX * size.width * 1.5f
@@ -94,25 +95,39 @@ fun HandComponent(
         }
         Row(
             Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onSwipeLeft() }) {
+            IconButton(enabled = displayStart != 0, onClick = {
+                onSwipeLeft()
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "Left"
+                    contentDescription = stringResource(Res.string.left),
+                    tint = if (displayStart != 0) Color.White else Color.Gray
                 )
             }
-            Button(onClick = { onPlaySelectedCard() }) {
-                Text(text = stringResource(Res.string.play_card), fontSize = 10.sp)
-            }
-            Button(onClick = { onEndTurn() }) {
-                Text(text = stringResource(Res.string.end_turn), fontSize = 10.sp)
-            }
-            IconButton(onClick = { onSwipeRight() }) {
+            GameButton(
+                Modifier.width(130.dp),
+                text = stringResource(Res.string.play_card),
+                onClick = {
+                    onPlaySelectedCard()
+                })
+            GameButton(
+                Modifier.width(130.dp),
+                text = stringResource(Res.string.end_turn),
+                onClick = {
+                    onEndTurn()
+                })
+            IconButton(
+                enabled = hand.size > DisplayInfo.CARD_IN_HAND_MAX && displayStart != hand.size - DisplayInfo.CARD_IN_HAND_MAX,
+                onClick = {
+                    onSwipeRight()
+                }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Right"
+                    contentDescription = stringResource(Res.string.right),
+                    tint = if (hand.size > DisplayInfo.CARD_IN_HAND_MAX && displayStart != hand.size - DisplayInfo.CARD_IN_HAND_MAX) Color.White else Color.Gray
                 )
             }
         }

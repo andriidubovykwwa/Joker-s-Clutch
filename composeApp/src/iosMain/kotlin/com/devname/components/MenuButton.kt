@@ -19,7 +19,13 @@ import jokersclutch.composeapp.generated.resources.button_bg
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun AppButton(modifier: Modifier = Modifier, onClick: () -> Unit, text: String) {
+fun MenuButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    text: String,
+    color: Color = Color.White,
+    outlineColor: Color? = Color(0xffA30E00)
+) {
     Box(
         modifier
             .aspectRatio(2.83f)
@@ -35,8 +41,8 @@ fun AppButton(modifier: Modifier = Modifier, onClick: () -> Unit, text: String) 
         AppText(
             text = text.uppercase(),
             fontSize = 18.sp,
-            color = Color(0xffFFFFFF),
-            outlineColor = Color(0xffA30E00)
+            color = color,
+            outlineColor = outlineColor
         )
     }
 }

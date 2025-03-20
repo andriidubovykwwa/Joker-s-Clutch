@@ -1,12 +1,16 @@
 package com.devname.data.game_configuration
 
 import jokersclutch.composeapp.generated.resources.Res
-import jokersclutch.composeapp.generated.resources.card_art_example
 import jokersclutch.composeapp.generated.resources.enemy_1_name
 import jokersclutch.composeapp.generated.resources.enemy_2_name
 import jokersclutch.composeapp.generated.resources.enemy_3_name
 import jokersclutch.composeapp.generated.resources.enemy_4_name
 import jokersclutch.composeapp.generated.resources.enemy_5_name
+import jokersclutch.composeapp.generated.resources.enemy_picture_1
+import jokersclutch.composeapp.generated.resources.enemy_picture_2
+import jokersclutch.composeapp.generated.resources.enemy_picture_3
+import jokersclutch.composeapp.generated.resources.enemy_picture_4
+import jokersclutch.composeapp.generated.resources.enemy_picture_5
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
@@ -21,7 +25,7 @@ enum class Enemy(
     ENEMY_1(
         lvl = 0,
         titleRes = Res.string.enemy_1_name,
-        imageRes = Res.drawable.card_art_example,
+        imageRes = Res.drawable.enemy_picture_1,
         startHealth = 25,
         minAttackDefenseValue = 2,
         maxAttackDefenseValue = 3
@@ -29,7 +33,7 @@ enum class Enemy(
     ENEMY_2(
         lvl = 1,
         titleRes = Res.string.enemy_2_name,
-        imageRes = Res.drawable.card_art_example,
+        imageRes = Res.drawable.enemy_picture_2,
         startHealth = 50,
         minAttackDefenseValue = 3,
         maxAttackDefenseValue = 5
@@ -37,7 +41,7 @@ enum class Enemy(
     ENEMY_3(
         lvl = 2,
         titleRes = Res.string.enemy_3_name,
-        imageRes = Res.drawable.card_art_example,
+        imageRes = Res.drawable.enemy_picture_3,
         startHealth = 75,
         minAttackDefenseValue = 5,
         maxAttackDefenseValue = 8
@@ -45,7 +49,7 @@ enum class Enemy(
     ENEMY_4(
         lvl = 3,
         titleRes = Res.string.enemy_4_name,
-        imageRes = Res.drawable.card_art_example,
+        imageRes = Res.drawable.enemy_picture_4,
         startHealth = 100,
         minAttackDefenseValue = 8,
         maxAttackDefenseValue = 10
@@ -53,7 +57,7 @@ enum class Enemy(
     ENEMY_5(
         lvl = 4,
         titleRes = Res.string.enemy_5_name,
-        imageRes = Res.drawable.card_art_example,
+        imageRes = Res.drawable.enemy_picture_5,
         startHealth = 150,
         minAttackDefenseValue = 10,
         maxAttackDefenseValue = 12

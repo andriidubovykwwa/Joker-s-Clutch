@@ -22,11 +22,11 @@
     <string name="mis_card_4_name">Sacrificial Strike</string>
     <string name="mis_card_4_desc">Deal 5 damage and lose 5 health</string>
     <!--  Enemies  -->
-    <string name="enemy_1_name">Enemy Name</string>
-    <string name="enemy_2_name">Enemy Name</string>
-    <string name="enemy_3_name">Enemy Name</string>
-    <string name="enemy_4_name">Enemy Name</string>
-    <string name="enemy_5_name">Enemy Name</string>
+    <string name="enemy_1_name">Tricky Trix</string>
+    <string name="enemy_2_name">Grumpy Giggles</string>
+    <string name="enemy_3_name">Sneaky Smirk</string>
+    <string name="enemy_4_name">Bouncy Buffoon</string>
+    <string name="enemy_5_name">Wobble Joker</string>
     <!--  UI  -->
     <string name="music">Music</string>
     <string name="sounds">Sounds</string>
@@ -36,4 +36,18 @@
     <string name="new_card_unlocked">New card unlocked</string>
     <string name="play_card">Play Card</string>
     <string name="end_turn">End Turn</string>
+    <string name="play">Play</string>
+    <string name="collection">Collection</string>
+    <string name="info">Info</string>
+    <string name="select_your_opponent">Select your opponent</string>
+    <string name="defense">Defense</string>
+    <string name="attack">Attack</string>
+    <string name="enemy">Enemy</string>
+    <string name="player">Player</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="retry">Retry</string>
+    <string name="home">Home</string>
+    <string name="defeat_text">TODO: lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</string>
+
 </resources>
