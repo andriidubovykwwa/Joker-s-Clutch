@@ -1,6 +1,10 @@
 package com.devname.screen.game
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -74,6 +78,16 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
     val obtainEvent = viewModel::obtainEvent
     val animatingCardIndex by viewModel.animatingCardIndex.collectAsState()
     val isShuffleAnimationActive by viewModel.isShuffleAnimationActive.collectAsState()
+    val infiniteTransition = rememberInfiniteTransition()
+    val animDuration = 5000
+    val enemyAnimationProgress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(animDuration),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
     LaunchedEffect(state.isTurnEnded) {
         if (state.playerHealth > 0 && state.enemyHealth > 0) {
             if (state.playerAttack > 0) {
@@ -138,7 +152,13 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
         ) {
             Box(
                 Modifier.fillMaxHeight(0.35f)
-                    .graphicsLayer { translationY = size.height * 0.16f },
+                    .graphicsLayer {
+                        translationY = size.height * 0.16f
+                        scaleX = 1f + enemyAnimationProgress * 0.05f
+                        scaleY = 1f + enemyAnimationProgress * 0.05f
+                        translationX =
+                            size.width * -0.02f + size.width * enemyAnimationProgress * 0.04f
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
