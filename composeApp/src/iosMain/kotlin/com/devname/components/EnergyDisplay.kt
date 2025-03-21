@@ -1,10 +1,13 @@
 package com.devname.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,7 +27,11 @@ fun EnergyDisplay(
     maxValue: Int? = null,
     fontSize: TextUnit = 15.sp
 ) {
-    val filling = if (maxValue != null) value / maxValue.toFloat()
+    val animatedValue by animateFloatAsState(
+        targetValue = value.toFloat(),
+        animationSpec = tween(250)
+    )
+    val filling = if (maxValue != null) animatedValue / maxValue.toFloat()
     else 1f
     Box(
         modifier = modifier.border(2.dp, Color.White, CircleShape),
