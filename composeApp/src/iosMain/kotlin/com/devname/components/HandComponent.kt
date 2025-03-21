@@ -29,9 +29,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -150,27 +147,7 @@ fun HandComponent(
                                 repeatMode = RepeatMode.Restart
                             )
                         )
-                        val glowThickness = 100f
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .background(
-                                    brush = Brush.linearGradient(
-                                        colors = listOf(
-                                            Color.Transparent,
-                                            Color(0x1fffffff),
-                                            Color.Transparent
-                                        ),
-                                        start = Offset(offsetX, offsetX),
-                                        end = Offset(
-                                            offsetX + glowThickness,
-                                            offsetX + glowThickness
-                                        )
-                                    ),
-                                    RoundedCornerShape(15.dp)
-                                ).clip(RoundedCornerShape(15.dp))
-                        )
-
+                        AnimatedGlow(offsetX, 100f, RoundedCornerShape(15.dp))
                     }
                 }
             }

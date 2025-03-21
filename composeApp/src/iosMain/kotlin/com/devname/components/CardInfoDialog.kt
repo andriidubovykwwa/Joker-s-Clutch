@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,10 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
@@ -59,25 +54,7 @@ fun CardInfoDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit, card: C
                 card = card,
                 fontSizeScale = 2f
             )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color(0x1fffffff),
-                                Color.Transparent
-                            ),
-                            start = Offset(offsetX, offsetX),
-                            end = Offset(
-                                offsetX + glowThickness,
-                                offsetX + glowThickness
-                            )
-                        ),
-                        RoundedCornerShape(15.dp)
-                    ).clip(RoundedCornerShape(15.dp))
-            )
+            AnimatedGlow(offsetX, glowThickness, RoundedCornerShape(15.dp))
         }
     }
 }
