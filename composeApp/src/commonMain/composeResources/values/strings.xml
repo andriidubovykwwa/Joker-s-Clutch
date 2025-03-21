@@ -26,7 +26,7 @@
     <string name="enemy_2_name">Grumpy Giggles</string>
     <string name="enemy_3_name">Sneaky Smirk</string>
     <string name="enemy_4_name">Bouncy Buffoon</string>
-    <string name="enemy_5_name">Wobble Joker</string>
+    <string name="enemy_5_name">Wobble Jester</string>
     <!--  UI  -->
     <string name="music">Music</string>
     <string name="sounds">Sounds</string>
@@ -50,5 +50,6 @@
     <string name="home">Home</string>
     <string name="punch_effect">Punch effect</string>
     <string name="defeat_text">Don't let them giggle too much—try again!</string>
+    <string name="save">Save</string>
 
 </resources>

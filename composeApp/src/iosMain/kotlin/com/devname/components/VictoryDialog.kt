@@ -67,7 +67,7 @@ fun VictoryDialog(
                 ) {
                     unlockedCards.forEach { card ->
                         CardComponent(
-                            modifier = Modifier.size(80.dp, 128.dp).pointerInput(Unit) {
+                            modifier = Modifier.size(80.dp, 142.dp).pointerInput(Unit) {
                                 detectTapGestures(
                                     onTap = { onDisplayCard(card) },
                                 )
@@ -78,21 +78,25 @@ fun VictoryDialog(
                 }
             }
             Spacer(Modifier.height(5.dp))
-            MenuButton(
-                Modifier.width(120.dp),
-                text = stringResource(Res.string.retry),
-                onClick = onRestart,
-                outlineColor = null,
-                color = Color(0xff3CFF00)
-            )
-            Spacer(Modifier.height(5.dp))
-            MenuButton(
-                Modifier.width(120.dp),
-                text = stringResource(Res.string.home),
-                onClick = onHome,
-                outlineColor = null,
-                color = Color(0xffFFEE00)
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MenuButton(
+                    Modifier.width(120.dp),
+                    text = stringResource(Res.string.retry),
+                    onClick = onRestart,
+                    outlineColor = null,
+                    color = Color(0xff3CFF00)
+                )
+                MenuButton(
+                    Modifier.width(120.dp),
+                    text = stringResource(Res.string.home),
+                    onClick = onHome,
+                    outlineColor = null,
+                    color = Color(0xffFFEE00)
+                )
+            }
         }
     }
 }

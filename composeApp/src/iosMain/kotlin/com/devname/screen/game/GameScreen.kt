@@ -142,7 +142,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
                 ).size(40.dp)
             ) {
                 SoundController.playClick(state.sounds)
-                navController.popBackStack()
+                navController.popBackStack(Screen.Menu, false)
             }
 
         }
@@ -200,7 +200,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
                     StatDisplay(
                         drawableRes = Res.drawable.shield_icon,
                         description = "${stringResource(Res.string.player)} ${stringResource(Res.string.defense)}",
-                        value = state.playerAttack,
+                        value = state.playerBlock,
                         mirror = true
                     )
                     Column(
@@ -240,6 +240,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
                     displayStart = state.displayHandStartIndex,
                     playAnimationIndex = animatingCardIndex,
                     isShuffleAnimationActive = isShuffleAnimationActive,
+                    energy = state.playerEnergy
                 )
             }
         }

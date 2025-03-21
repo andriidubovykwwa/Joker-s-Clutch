@@ -52,7 +52,8 @@ class GameViewModel(
                     enemy = enemy,
                     enemyHealth = enemy.startHealth,
                     playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                    playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                    playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN)
+                        .sortedBy { x -> x.energyCost },
                     enemyAttack = enemyAttack,
                     enemyBlock = enemyBlock,
                     lastCompletedLvl = lastCompletedLvl,
@@ -101,7 +102,8 @@ class GameViewModel(
                 isTurnEnded = false,
                 startDeck = startDeck,
                 playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN)
+                    .sortedBy { x -> x.energyCost },
                 enemyAttack = enemyAttack,
                 enemyBlock = enemyBlock,
                 playerAttack = 0,
@@ -175,7 +177,8 @@ class GameViewModel(
                 playerEnergy = PlayerStats.START_ENERGY,
                 startDeck = startDeck,
                 playerDeck = startDeck.drop(PlayerStats.DRAW_CARD_PER_TURN),
-                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN),
+                playerHand = startDeck.take(PlayerStats.DRAW_CARD_PER_TURN)
+                    .sortedBy { x -> x.energyCost },
                 enemyAttack = enemyAttack,
                 enemyBlock = enemyBlock,
                 playerAttack = 0,

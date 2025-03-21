@@ -106,7 +106,10 @@ fun MenuScreen(navController: NavController, viewModel: MenuViewModel = koinView
             sounds = state.sounds,
             onSetMusic = { obtainEvent(MenuEvent.SetMusic(it)) },
             onSetSounds = { obtainEvent(MenuEvent.SetSounds(it)) },
-            onDismiss = { isOptionsOpened = false }
+            onDismiss = {
+                SoundController.playClick(state.sounds)
+                isOptionsOpened = false
+            }
         )
     }
 }

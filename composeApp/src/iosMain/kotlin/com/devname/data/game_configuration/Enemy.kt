@@ -34,7 +34,7 @@ enum class Enemy(
         lvl = 1,
         titleRes = Res.string.enemy_2_name,
         imageRes = Res.drawable.enemy_picture_2,
-        startHealth = 40,
+        startHealth = 30,
         minAttackDefenseValue = 3,
         maxAttackDefenseValue = 5
     ),
@@ -42,24 +42,24 @@ enum class Enemy(
         lvl = 2,
         titleRes = Res.string.enemy_3_name,
         imageRes = Res.drawable.enemy_picture_3,
-        startHealth = 50,
-        minAttackDefenseValue = 5,
-        maxAttackDefenseValue = 7
+        startHealth = 40,
+        minAttackDefenseValue = 4,
+        maxAttackDefenseValue = 5
     ),
     ENEMY_4(
         lvl = 3,
         titleRes = Res.string.enemy_4_name,
         imageRes = Res.drawable.enemy_picture_4,
-        startHealth = 60,
-        minAttackDefenseValue = 7,
-        maxAttackDefenseValue = 9
+        startHealth = 50,
+        minAttackDefenseValue = 5,
+        maxAttackDefenseValue = 6
     ),
     ENEMY_5(
         lvl = 4,
         titleRes = Res.string.enemy_5_name,
         imageRes = Res.drawable.enemy_picture_5,
-        startHealth = 75,
-        minAttackDefenseValue = 9,
-        maxAttackDefenseValue = 11
+        startHealth = 60,
+        minAttackDefenseValue = 6,
+        maxAttackDefenseValue = 8
     ),
 }

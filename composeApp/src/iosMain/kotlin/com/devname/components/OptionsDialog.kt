@@ -1,12 +1,14 @@
 package com.devname.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -29,6 +31,7 @@ import jokersclutch.composeapp.generated.resources.left
 import jokersclutch.composeapp.generated.resources.music
 import jokersclutch.composeapp.generated.resources.options
 import jokersclutch.composeapp.generated.resources.right
+import jokersclutch.composeapp.generated.resources.save
 import jokersclutch.composeapp.generated.resources.sounds
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -42,12 +45,9 @@ fun OptionDialog(
     music: Int,
     sounds: Int,
 ) {
-    Dialog(onDismissRequest = {
-        SoundController.playClick(sounds)
-        onDismiss()
-    }) {
+    Dialog(onDismissRequest = {}) {
         Column(
-            modifier.widthIn(min = 150.dp).paint(
+            modifier.widthIn(min = 220.dp).heightIn(min = 150.dp).paint(
                 painter = painterResource(Res.drawable.dialog_bg),
                 contentScale = ContentScale.FillBounds
             ).padding(10.dp),
@@ -62,84 +62,104 @@ fun OptionDialog(
             )
             Spacer(Modifier.height(25.dp))
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.widthIn(min = 150.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
             ) {
-                AppText(
-                    text = stringResource(Res.string.music).uppercase(),
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    outlineColor = null
-                )
-                IconButton(onClick = {
-                    SoundController.playClick(sounds)
-                    onSetMusic(music - 1)
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = stringResource(Res.string.left),
-                        tint = Color.White
+                Box(Modifier.weight(2f), contentAlignment = Alignment.Center) {
+                    AppText(
+                        text = stringResource(Res.string.music).uppercase(),
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        outlineColor = null
                     )
                 }
-                AppText(
-                    text = music.toString(),
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    outlineColor = null
-                )
-                IconButton(onClick = {
-                    SoundController.playClick(sounds)
-                    onSetMusic(music + 1)
-                }
+                Row(
+                    Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = stringResource(Res.string.right),
-                        tint = Color.White
+                    IconButton(onClick = {
+                        SoundController.playClick(sounds)
+                        onSetMusic(music - 1)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = stringResource(Res.string.left),
+                            tint = Color.White
+                        )
+                    }
+                    AppText(
+                        text = music.toString(),
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        outlineColor = null
                     )
+                    IconButton(onClick = {
+                        SoundController.playClick(sounds)
+                        onSetMusic(music + 1)
+                    }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = stringResource(Res.string.right),
+                            tint = Color.White
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(10.dp))
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.widthIn(min = 150.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
             ) {
-                AppText(
-                    text = stringResource(Res.string.sounds).uppercase(),
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    outlineColor = null
-                )
-                IconButton(onClick = {
-                    SoundController.playClick(sounds)
-                    onSetSounds(sounds - 1)
+                Box(Modifier.weight(2f), contentAlignment = Alignment.Center) {
+                    AppText(
+                        text = stringResource(Res.string.sounds).uppercase(),
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        outlineColor = null
+                    )
                 }
+                Row(
+                    Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = stringResource(Res.string.left),
-                        tint = Color.White
+                    IconButton(onClick = {
+                        SoundController.playClick(sounds)
+                        onSetSounds(sounds - 1)
+                    }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = stringResource(Res.string.left),
+                            tint = Color.White
+                        )
+                    }
+                    AppText(
+                        text = sounds.toString(),
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        outlineColor = null
                     )
-                }
-                AppText(
-                    text = sounds.toString(),
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    outlineColor = null
-                )
-                IconButton(onClick = {
-                    SoundController.playClick(sounds)
-                    onSetSounds(sounds + 1)
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = stringResource(Res.string.right),
-                        tint = Color.White
-                    )
+                    IconButton(onClick = {
+                        SoundController.playClick(sounds)
+                        onSetSounds(sounds + 1)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = stringResource(Res.string.right),
+                            tint = Color.White
+                        )
+                    }
                 }
             }
+            Spacer(Modifier.height(10.dp))
+            MenuButton(
+                Modifier.width(120.dp),
+                text = stringResource(Res.string.save),
+                onClick = { onDismiss() },
+                outlineColor = null,
+                color = Color(0xff3CFF00)
+            )
         }
     }
 }
