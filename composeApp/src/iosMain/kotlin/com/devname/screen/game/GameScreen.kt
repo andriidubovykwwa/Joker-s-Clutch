@@ -1,11 +1,13 @@
 package com.devname.screen.game
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +53,7 @@ import com.devname.components.HealthBar
 import com.devname.components.StatDisplay
 import com.devname.components.VictoryDialog
 import com.devname.data.game_configuration.Card
+import com.devname.data.game_configuration.DisplayInfo
 import com.devname.data.game_configuration.PlayerStats
 import com.devname.navigation.Screen
 import com.devname.screen.game.view_model.GameEvent
@@ -88,6 +91,8 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             repeatMode = RepeatMode.Reverse
         )
     )
+    var showElements by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { showElements = true }
     LaunchedEffect(state.isTurnEnded) {
         if (state.playerHealth > 0 && state.enemyHealth > 0) {
             if (state.playerAttack > 0) {
@@ -105,143 +110,161 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
             contentScale = ContentScale.FillBounds
         )
     ) {
-        Column(Modifier.align(Alignment.TopCenter)) {
-            Row(
-                Modifier.fillMaxWidth().background(Color(0xB3000000))
-                    .padding(
-                        top = WindowInsets.safeContent.asPaddingValues().calculateTopPadding(),
-                        start = WindowInsets.safeContent.asPaddingValues()
-                            .calculateStartPadding(LayoutDirection.Ltr),
-                        end = WindowInsets.safeContent.asPaddingValues()
-                            .calculateEndPadding(LayoutDirection.Ltr),
-                        bottom = 5.dp
-                    ),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                StatDisplay(
-                    drawableRes = Res.drawable.shield_icon,
-                    description = "${stringResource(Res.string.enemy)} ${stringResource(Res.string.defense)}",
-                    value = state.enemyBlock
-                )
-                HealthBar(
-                    Modifier.weight(1f),
-                    value = state.enemyHealth,
-                    maxValue = state.enemy.startHealth
-                )
-                StatDisplay(
-                    drawableRes = Res.drawable.sword_icon,
-                    description = "${stringResource(Res.string.enemy)} ${stringResource(Res.string.attack)}",
-                    value = state.enemyAttack
-                )
-            }
-            BackButton(
-                Modifier.padding(
-                    start = WindowInsets.safeContent.asPaddingValues()
-                        .calculateStartPadding(LayoutDirection.Ltr), top = 5.dp
-                ).size(40.dp)
-            ) {
-                SoundController.playClick(state.sounds)
-                navController.popBackStack(Screen.Menu, false)
-            }
-
-        }
-        Column(
-            Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
+        AnimatedVisibility(
+            visible = showElements,
+            enter = DisplayInfo.elementStartAnimation,
+            exit = fadeOut()
         ) {
-            Box(
-                Modifier.fillMaxHeight(0.35f)
-                    .graphicsLayer {
-                        translationY = size.height * 0.16f
-                        scaleX = 1f + enemyAnimationProgress * 0.05f
-                        scaleY = 1f + enemyAnimationProgress * 0.05f
-                        translationX =
-                            size.width * -0.02f + size.width * enemyAnimationProgress * 0.04f
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxHeight(),
-                    painter = painterResource(state.enemy.imageRes),
-                    contentDescription = stringResource(state.enemy.titleRes),
-                    contentScale = ContentScale.FillHeight
-                )
-                val punchVisibility by animateFloatAsState(
-                    targetValue = if (showSlash) 1f else 0f,
-                    animationSpec = tween(durationMillis = 350)
-                )
-                Image(
-                    painter = painterResource(Res.drawable.icon_attack_card_1),
-                    contentDescription = stringResource(Res.string.punch_effect),
-                    modifier = Modifier
-                        .fillMaxSize(0.3f)
-                        .alpha(punchVisibility)
-                        .scale(punchVisibility)
-                )
-            }
-            Column(
-                Modifier.fillMaxWidth().background(Color(0xB3000000)).padding(
-                    bottom = WindowInsets.safeContent.asPaddingValues().calculateBottomPadding(),
-                    start = WindowInsets.safeContent.asPaddingValues()
-                        .calculateStartPadding(LayoutDirection.Ltr),
-                    end = WindowInsets.safeContent.asPaddingValues()
-                        .calculateEndPadding(LayoutDirection.Ltr),
-                    top = 5.dp
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    StatDisplay(
-                        drawableRes = Res.drawable.shield_icon,
-                        description = "${stringResource(Res.string.player)} ${stringResource(Res.string.defense)}",
-                        value = state.playerBlock,
-                        mirror = true
-                    )
-                    Column(
-                        Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Bottom
+            Box(Modifier.fillMaxSize()) {
+                Column(Modifier.align(Alignment.TopCenter)) {
+                    Row(
+                        Modifier.fillMaxWidth().background(Color(0xB3000000))
+                            .padding(
+                                top = WindowInsets.safeContent.asPaddingValues()
+                                    .calculateTopPadding(),
+                                start = WindowInsets.safeContent.asPaddingValues()
+                                    .calculateStartPadding(LayoutDirection.Ltr),
+                                end = WindowInsets.safeContent.asPaddingValues()
+                                    .calculateEndPadding(LayoutDirection.Ltr),
+                                bottom = 5.dp
+                            ),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        EnergyDisplay(
-                            Modifier.size(50.dp),
-                            value = state.playerEnergy,
-                            maxValue = PlayerStats.START_ENERGY
+                        StatDisplay(
+                            drawableRes = Res.drawable.shield_icon,
+                            description = "${stringResource(Res.string.enemy)} ${stringResource(Res.string.defense)}",
+                            value = state.enemyBlock
                         )
-                        Spacer(Modifier.height(5.dp))
                         HealthBar(
-                            Modifier.fillMaxWidth(),
-                            value = state.playerHealth,
-                            maxValue = PlayerStats.START_HEALTH
+                            Modifier.weight(1f),
+                            value = state.enemyHealth,
+                            maxValue = state.enemy.startHealth
+                        )
+                        StatDisplay(
+                            drawableRes = Res.drawable.sword_icon,
+                            description = "${stringResource(Res.string.enemy)} ${stringResource(Res.string.attack)}",
+                            value = state.enemyAttack
                         )
                     }
-                    StatDisplay(
-                        drawableRes = Res.drawable.sword_icon,
-                        description = "${stringResource(Res.string.player)} ${stringResource(Res.string.attack)}",
-                        value = state.playerAttack,
-                        mirror = true
-                    )
+                    BackButton(
+                        Modifier.padding(
+                            start = WindowInsets.safeContent.asPaddingValues()
+                                .calculateStartPadding(LayoutDirection.Ltr), top = 5.dp
+                        ).size(40.dp)
+                    ) {
+                        SoundController.playClick(state.sounds)
+                        navController.popBackStack(Screen.Menu, false)
+                    }
+
                 }
-                HandComponent(
-                    Modifier.fillMaxWidth(),
-                    hand = state.playerHand,
-                    selectedCardIndex = state.selectedCardIndex,
-                    onSelectCard = { obtainEvent(GameEvent.SelectCard(it)) },
-                    onDisplayCard = { obtainEvent(GameEvent.DisplayCard(it)) },
-                    onPlaySelectedCard = { obtainEvent(GameEvent.PlaySelectedCard) },
-                    onEndTurn = { obtainEvent(GameEvent.EndTurn) },
-                    onSwipeLeft = { obtainEvent(GameEvent.SwipeHandLeft) },
-                    onSwipeRight = { obtainEvent(GameEvent.SwipeHandRight) },
-                    displayStart = state.displayHandStartIndex,
-                    playAnimationIndex = animatingCardIndex,
-                    isShuffleAnimationActive = isShuffleAnimationActive,
-                    energy = state.playerEnergy
-                )
+                Column(
+                    Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        Modifier.fillMaxHeight(0.35f)
+                            .graphicsLayer {
+                                translationY = size.height * 0.16f
+                                scaleX = 1f + enemyAnimationProgress * 0.05f
+                                scaleY = 1f + enemyAnimationProgress * 0.05f
+                                translationX =
+                                    size.width * -0.02f + size.width * enemyAnimationProgress * 0.04f
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            modifier = Modifier.fillMaxHeight(),
+                            painter = painterResource(state.enemy.imageRes),
+                            contentDescription = stringResource(state.enemy.titleRes),
+                            contentScale = ContentScale.FillHeight
+                        )
+                        val punchVisibility by animateFloatAsState(
+                            targetValue = if (showSlash) 1f else 0f,
+                            animationSpec = tween(durationMillis = 350)
+                        )
+                        Image(
+                            painter = painterResource(Res.drawable.icon_attack_card_1),
+                            contentDescription = stringResource(Res.string.punch_effect),
+                            modifier = Modifier
+                                .fillMaxSize(0.3f)
+                                .alpha(punchVisibility)
+                                .scale(punchVisibility)
+                        )
+                    }
+                    Column(
+                        Modifier.fillMaxWidth().background(Color(0xB3000000)).padding(
+                            bottom = WindowInsets.safeContent.asPaddingValues()
+                                .calculateBottomPadding(),
+                            start = WindowInsets.safeContent.asPaddingValues()
+                                .calculateStartPadding(LayoutDirection.Ltr),
+                            end = WindowInsets.safeContent.asPaddingValues()
+                                .calculateEndPadding(LayoutDirection.Ltr),
+                            top = 5.dp
+                        ),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            StatDisplay(
+                                drawableRes = Res.drawable.shield_icon,
+                                description = "${stringResource(Res.string.player)} ${
+                                    stringResource(
+                                        Res.string.defense
+                                    )
+                                }",
+                                value = state.playerBlock,
+                                mirror = true
+                            )
+                            Column(
+                                Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Bottom
+                            ) {
+                                EnergyDisplay(
+                                    Modifier.size(50.dp),
+                                    value = state.playerEnergy,
+                                    maxValue = PlayerStats.START_ENERGY
+                                )
+                                Spacer(Modifier.height(5.dp))
+                                HealthBar(
+                                    Modifier.fillMaxWidth(),
+                                    value = state.playerHealth,
+                                    maxValue = PlayerStats.START_HEALTH
+                                )
+                            }
+                            StatDisplay(
+                                drawableRes = Res.drawable.sword_icon,
+                                description = "${stringResource(Res.string.player)} ${
+                                    stringResource(
+                                        Res.string.attack
+                                    )
+                                }",
+                                value = state.playerAttack,
+                                mirror = true
+                            )
+                        }
+                        HandComponent(
+                            Modifier.fillMaxWidth(),
+                            hand = state.playerHand,
+                            selectedCardIndex = state.selectedCardIndex,
+                            onSelectCard = { obtainEvent(GameEvent.SelectCard(it)) },
+                            onDisplayCard = { obtainEvent(GameEvent.DisplayCard(it)) },
+                            onPlaySelectedCard = { obtainEvent(GameEvent.PlaySelectedCard) },
+                            onEndTurn = { obtainEvent(GameEvent.EndTurn) },
+                            onSwipeLeft = { obtainEvent(GameEvent.SwipeHandLeft) },
+                            onSwipeRight = { obtainEvent(GameEvent.SwipeHandRight) },
+                            displayStart = state.displayHandStartIndex,
+                            playAnimationIndex = animatingCardIndex,
+                            isShuffleAnimationActive = isShuffleAnimationActive,
+                            energy = state.playerEnergy
+                        )
+                    }
+                }
             }
         }
     }

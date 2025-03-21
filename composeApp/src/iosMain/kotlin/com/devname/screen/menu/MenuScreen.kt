@@ -1,10 +1,12 @@
 package com.devname.screen.menu
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +36,7 @@ import androidx.navigation.NavController
 import com.devname.components.AnimatedGlow
 import com.devname.components.MenuButton
 import com.devname.components.OptionDialog
+import com.devname.data.game_configuration.DisplayInfo
 import com.devname.navigation.Screen
 import com.devname.screen.menu.view_model.MenuEvent
 import com.devname.screen.menu.view_model.MenuViewModel
@@ -58,90 +61,102 @@ fun MenuScreen(navController: NavController, viewModel: MenuViewModel = koinView
     LaunchedEffect(state.music) {
         SoundController.playMusic(state.music)
     }
-    Column(
+    var showElements by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { showElements = true }
+    Box(
         Modifier.fillMaxSize().paint(
             painter = painterResource(Res.drawable.menu_bg),
             contentScale = ContentScale.FillBounds
-        ).safeContentPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        ).safeContentPadding()
     ) {
-        val infiniteTransition = rememberInfiniteTransition()
-        val titleRotation by infiniteTransition.animateFloat(
-            initialValue = -10f,
-            targetValue = 10f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(2000),
-                repeatMode = RepeatMode.Reverse
-            )
-        )
-        Image(
-            modifier = Modifier.height(220.dp).graphicsLayer {
-                rotationY = titleRotation
-            },
-            painter = painterResource(Res.drawable.app_title),
-            contentDescription = stringResource(Res.string.app_name),
-            contentScale = ContentScale.FillHeight
-        )
-        Column(
-            Modifier.width(230.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+        AnimatedVisibility(
+            visible = showElements,
+            enter = DisplayInfo.elementStartAnimation,
+            exit = fadeOut()
         ) {
-            val glowThickness = 100f
-            val shape = RoundedCornerShape(10.dp)
-            var buttonSize by remember { mutableStateOf(IntSize.Zero) }
-            val offsetX by infiniteTransition.animateFloat(
-                initialValue = buttonSize.width * 1.4f,
-                targetValue = -buttonSize.width * 0.4f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(2000),
-                    repeatMode = RepeatMode.Restart
+            Column(
+                Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                val infiniteTransition = rememberInfiniteTransition()
+                val titleRotation by infiniteTransition.animateFloat(
+                    initialValue = -10f,
+                    targetValue = 10f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(2000),
+                        repeatMode = RepeatMode.Reverse
+                    )
                 )
-            )
-            Box(Modifier.fillMaxWidth().onSizeChanged { buttonSize = it }) {
-                MenuButton(
-                    Modifier.fillMaxWidth(),
-                    onClick = {
-                        SoundController.playClick(state.sounds)
-                        navController.navigate(Screen.LevelSelector)
+                Image(
+                    modifier = Modifier.height(220.dp).graphicsLayer {
+                        rotationY = titleRotation
                     },
-                    text = stringResource(Res.string.play)
+                    painter = painterResource(Res.drawable.app_title),
+                    contentDescription = stringResource(Res.string.app_name),
+                    contentScale = ContentScale.FillHeight
                 )
-                AnimatedGlow(offsetX, glowThickness, shape)
-            }
-            Box(Modifier.fillMaxWidth()) {
-                MenuButton(
-                    Modifier.fillMaxWidth(),
-                    onClick = {
-                        SoundController.playClick(state.sounds)
-                        navController.navigate(Screen.Collection)
-                    },
-                    text = stringResource(Res.string.collection)
-                )
-                AnimatedGlow(offsetX, glowThickness, shape)
-            }
-            Box(Modifier.fillMaxWidth()) {
-                MenuButton(
-                    Modifier.fillMaxWidth(),
-                    onClick = {
-                        SoundController.playClick(state.sounds)
-                        navController.navigate(Screen.Info)
-                    },
-                    text = stringResource(Res.string.info)
-                )
-                AnimatedGlow(offsetX, glowThickness, shape)
-            }
-            Box(Modifier.fillMaxWidth()) {
-                MenuButton(
-                    Modifier.fillMaxWidth(),
-                    onClick = {
-                        SoundController.playClick(state.sounds)
-                        isOptionsOpened = true
-                    },
-                    text = stringResource(Res.string.options)
-                )
-                AnimatedGlow(offsetX, glowThickness, shape)
+                Column(
+                    Modifier.width(230.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    val glowThickness = 100f
+                    val shape = RoundedCornerShape(10.dp)
+                    var buttonSize by remember { mutableStateOf(IntSize.Zero) }
+                    val offsetX by infiniteTransition.animateFloat(
+                        initialValue = buttonSize.width * 1.4f,
+                        targetValue = -buttonSize.width * 0.4f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(2000),
+                            repeatMode = RepeatMode.Restart
+                        )
+                    )
+                    Box(Modifier.fillMaxWidth().onSizeChanged { buttonSize = it }) {
+                        MenuButton(
+                            Modifier.fillMaxWidth(),
+                            onClick = {
+                                SoundController.playClick(state.sounds)
+                                navController.navigate(Screen.LevelSelector)
+                            },
+                            text = stringResource(Res.string.play)
+                        )
+                        AnimatedGlow(offsetX, glowThickness, shape)
+                    }
+                    Box(Modifier.fillMaxWidth()) {
+                        MenuButton(
+                            Modifier.fillMaxWidth(),
+                            onClick = {
+                                SoundController.playClick(state.sounds)
+                                navController.navigate(Screen.Collection)
+                            },
+                            text = stringResource(Res.string.collection)
+                        )
+                        AnimatedGlow(offsetX, glowThickness, shape)
+                    }
+                    Box(Modifier.fillMaxWidth()) {
+                        MenuButton(
+                            Modifier.fillMaxWidth(),
+                            onClick = {
+                                SoundController.playClick(state.sounds)
+                                navController.navigate(Screen.Info)
+                            },
+                            text = stringResource(Res.string.info)
+                        )
+                        AnimatedGlow(offsetX, glowThickness, shape)
+                    }
+                    Box(Modifier.fillMaxWidth()) {
+                        MenuButton(
+                            Modifier.fillMaxWidth(),
+                            onClick = {
+                                SoundController.playClick(state.sounds)
+                                isOptionsOpened = true
+                            },
+                            text = stringResource(Res.string.options)
+                        )
+                        AnimatedGlow(offsetX, glowThickness, shape)
+                    }
+                }
             }
         }
     }
