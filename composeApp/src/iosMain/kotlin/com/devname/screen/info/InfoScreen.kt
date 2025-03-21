@@ -3,6 +3,7 @@ package com.devname.screen.info
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,14 +35,26 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devname.components.AppText
 import com.devname.components.BackButton
+import com.devname.components.CardComponent
+import com.devname.components.CardInfoDialog
+import com.devname.components.EnergyDisplay
+import com.devname.components.HealthBar
+import com.devname.components.StatDisplay
+import com.devname.data.game_configuration.Card
 import com.devname.data.game_configuration.DisplayInfo
 import com.devname.data.game_configuration.Enemy
 import com.devname.data.game_configuration.PlayerStats
+import com.devname.screen.info.view_model.InfoEvent
 import com.devname.screen.info.view_model.InfoViewModel
 import com.devname.utils.SoundController
 import jokersclutch.composeapp.generated.resources.Res
+import jokersclutch.composeapp.generated.resources.attack
+import jokersclutch.composeapp.generated.resources.defense
+import jokersclutch.composeapp.generated.resources.enemy
 import jokersclutch.composeapp.generated.resources.info
 import jokersclutch.composeapp.generated.resources.menu_bg
+import jokersclutch.composeapp.generated.resources.shield_icon
+import jokersclutch.composeapp.generated.resources.sword_icon
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -48,6 +62,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
+    val obtainEvent = viewModel::obtainEvent
     var showElements by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { showElements = true }
     Box(
@@ -108,6 +123,13 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
                     )
                 }
                 item {
+                    HealthBar(
+                        Modifier.fillMaxWidth(),
+                        value = PlayerStats.START_HEALTH / 2,
+                        maxValue = PlayerStats.START_HEALTH
+                    )
+                }
+                item {
                     Spacer(Modifier.height(10.dp))
                 }
                 item {
@@ -143,11 +165,32 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
                     )
                 }
                 item {
+                    EnergyDisplay(
+                        Modifier.size(60.dp),
+                        value = PlayerStats.START_ENERGY,
+                        maxValue = PlayerStats.START_ENERGY
+                    )
+                }
+                item {
                     AppText(
                         text = "- Attack cards deal damage at the end of the turn.",
                         color = Color.White,
                         outlineColor = Color.Black,
                         fontSize = defaultSize
+                    )
+                }
+                item {
+                    CardComponent(
+                        Modifier
+                            .fillMaxWidth(0.4f)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        obtainEvent(InfoEvent.DisplayCard(Card.ATTACK_CARD_1))
+                                    }
+                                )
+                            },
+                        card = Card.ATTACK_CARD_1,
                     )
                 }
                 item {
@@ -159,11 +202,39 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
                     )
                 }
                 item {
+                    CardComponent(
+                        Modifier
+                            .fillMaxWidth(0.4f)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        obtainEvent(InfoEvent.DisplayCard(Card.DEFENSE_CARD_1))
+                                    }
+                                )
+                            },
+                        card = Card.DEFENSE_CARD_1,
+                    )
+                }
+                item {
                     AppText(
                         text = "- Special cards can combine attack and defense or provide other effects (e.g., drawing extra cards).",
                         color = Color.White,
                         outlineColor = Color.Black,
                         fontSize = defaultSize
+                    )
+                }
+                item {
+                    CardComponent(
+                        Modifier
+                            .fillMaxWidth(0.4f)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        obtainEvent(InfoEvent.DisplayCard(Card.MISC_CARD_1))
+                                    }
+                                )
+                            },
+                        card = Card.MISC_CARD_1,
                     )
                 }
                 item {
@@ -173,6 +244,23 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
                         outlineColor = Color.Black,
                         fontSize = defaultSize
                     )
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        StatDisplay(
+                            drawableRes = Res.drawable.shield_icon,
+                            description = "${stringResource(Res.string.enemy)} ${stringResource(Res.string.defense)}",
+                            value = 2
+                        )
+                        StatDisplay(
+                            drawableRes = Res.drawable.sword_icon,
+                            description = "${stringResource(Res.string.enemy)} ${stringResource(Res.string.attack)}",
+                            value = 3
+                        )
+                    }
                 }
                 item {
                     AppText(
@@ -219,5 +307,10 @@ fun InfoScreen(navController: NavController, viewModel: InfoViewModel = koinView
                 }
             }
         }
+    }
+    state.displayCard?.let {
+        CardInfoDialog(
+            card = it,
+            onDismiss = { obtainEvent(InfoEvent.DisplayCard(null)) })
     }
 }
